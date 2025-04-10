@@ -1,0 +1,200 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String    @id @default(cuid())
+  name              String?
+  email             String    @unique
+  password          String?
+  emailVerified     DateTime?
+  role              Role      @default(STUDENT)
+  agreedToTerms     Boolean   @default(false)
+  image             String?
+  bio               String?
+  verificationToken String?
+  lastLogin         DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  deletedAt         DateTime?
+
+  courses      Course[]      @relation("InstructorCourses")
+  enrollments  Enrollment[]
+  quizAttempts QuizAttempt[]
+  certificates Certificate[]
+  discussions  Discussion[]
+  comments     Comment[]
+  progress     Progress[]
+  resetTokens  PasswordResetToken[]
+
+  @@map("users")
+}
+
+model PasswordResetToken {
+  id      String   @id @default(cuid())
+  token   String   @unique
+  expires DateTime
+  userId  String
+  user    User     @relation(fields: [userId], references: [id])
+
+  @@map("password_reset_tokens")
+}
+
+model Course {
+  id           String        @id @default(cuid())
+  title        String
+  description  String
+  thumbnail    String?
+  price        Float         @default(0.0)
+  level        String?
+  tags         String? // changed from String[]
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  instructorId String
+  instructor   User          @relation("InstructorCourses", fields: [instructorId], references: [id])
+  modules      Module[]
+  enrollments  Enrollment[]
+  certificates Certificate[]
+  discussions  Discussion[]
+  quizzes      Quiz[] // 🔥 FIX: Add opposite relation to Quiz
+
+  @@map("courses")
+}
+
+model Module {
+  id       String   @id @default(cuid())
+  title    String
+  courseId String
+  course   Course   @relation(fields: [courseId], references: [id])
+  lessons  Lesson[]
+
+  @@map("modules")
+}
+
+model Lesson {
+  id        String   @id @default(cuid())
+  title     String
+  content   String
+  videoUrl  String?
+  moduleId  String
+  module    Module   @relation(fields: [moduleId], references: [id])
+  createdAt DateTime @default(now())
+
+  progress Progress[]
+
+  @@map("lessons")
+}
+
+model Enrollment {
+  id         String   @id @default(cuid())
+  userId     String
+  courseId   String
+  enrolledAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id])
+  course Course @relation(fields: [courseId], references: [id])
+
+  @@unique([userId, courseId])
+  @@map("enrollments")
+}
+
+model Progress {
+  id        String   @id @default(cuid())
+  userId    String
+  lessonId  String
+  completed Boolean  @default(false)
+  updatedAt DateTime @updatedAt
+
+  user   User   @relation(fields: [userId], references: [id])
+  lesson Lesson @relation(fields: [lessonId], references: [id])
+
+  @@unique([userId, lessonId])
+  @@map("progress")
+}
+
+model Quiz {
+  id        String        @id @default(cuid())
+  title     String
+  courseId  String
+  course    Course        @relation(fields: [courseId], references: [id])
+  questions Question[]
+  attempts  QuizAttempt[]
+
+  @@map("quizzes")
+}
+
+model Question {
+  id       String  @id @default(cuid())
+  quizId   String
+  question String
+  options  String? // changed from String[]
+  answer   String
+
+  quiz Quiz @relation(fields: [quizId], references: [id])
+
+  @@map("questions")
+}
+
+model QuizAttempt {
+  id          String   @id @default(cuid())
+  userId      String
+  quizId      String
+  score       Int
+  attemptedAt DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+  quiz Quiz @relation(fields: [quizId], references: [id])
+
+  @@unique([userId, quizId])
+  @@map("quiz_attempts")
+}
+
+model Certificate {
+  id       String   @id @default(cuid())
+  userId   String
+  courseId String
+  issuedAt DateTime @default(now())
+
+  user   User   @relation(fields: [userId], references: [id])
+  course Course @relation(fields: [courseId], references: [id])
+
+  @@map("certificates")
+}
+
+model Discussion {
+  id        String   @id @default(cuid())
+  content   String
+  userId    String
+  courseId  String
+  createdAt DateTime @default(now())
+
+  user     User      @relation(fields: [userId], references: [id])
+  course   Course    @relation(fields: [courseId], references: [id])
+  comments Comment[]
+
+  @@map("discussions")
+}
+
+model Comment {
+  id           String   @id @default(cuid())
+  discussionId String
+  userId       String
+  content      String
+  createdAt    DateTime @default(now())
+
+  discussion Discussion @relation(fields: [discussionId], references: [id])
+  user       User       @relation(fields: [userId], references: [id])
+
+  @@map("comments")
+}
+
+enum Role {
+  STUDENT
+  INSTRUCTOR
+  ADMIN
+}
