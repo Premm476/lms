@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import React, { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { FiLock, FiCheckCircle } from "react-icons/fi";
 import Link from "next/link";

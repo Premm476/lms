@@ -1,4 +1,3 @@
-import { useSession } from 'next-auth/react';
 import { FiAlertTriangle, FiCheckCircle, FiClock, FiBarChart2 } from 'react-icons/fi';
 import { motion } from 'framer-motion';
 
@@ -24,7 +23,6 @@ const exams = [
 ];
 
 export default function Exams() {
-  const { data: _session } = useSession();
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);

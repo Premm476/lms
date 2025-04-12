@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { FiClock, FiVideo, FiCalendar } from 'react-icons/fi'
 
 interface LiveClassScheduleProps {
@@ -6,7 +6,7 @@ interface LiveClassScheduleProps {
 }
 
 export default function LiveClassSchedule({ role }: LiveClassScheduleProps) {
-  const [classes, _setClasses] = useState([
+  const [classes] = useState([
     {
       id: 1,
       title: 'Advanced React Patterns',

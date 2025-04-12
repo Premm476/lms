@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Head from "next/head";
-import { useState } from "react";
+import React, { useState } from "react";
 import { motion } from "framer-motion";
 
 export default function DataScienceCourse() {

@@ -1,7 +1,7 @@
 import { SessionProvider, useSession } from 'next-auth/react';
 import type { AppProps } from 'next/app';
 import { useRouter } from 'next/router';
-import { ReactNode, useEffect } from 'react';
+import React, { ReactNode, useEffect } from 'react';
 import '../styles/globals.css';
 import '../styles/cross-browser.css';
 

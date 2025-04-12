@@ -1,11 +1,9 @@
 import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
 import { FiCheckCircle, FiArrowLeft, FiClock, FiAward } from 'react-icons/fi';
 import Image from 'next/image';
 
 export default function CourseEnrollment() {
   const router = useRouter();
-  const { data: _session } = useSession();
   const courseId = router.query.id;
 
   const course = {

@@ -3,7 +3,7 @@
 import Head from "next/head";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { useState } from "react";
+import React, { useState } from "react";
 
 export default function Contact() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { FiMoon, FiSun } from 'react-icons/fi'
 
 export default function DarkModeToggle() {

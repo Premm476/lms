@@ -20,7 +20,13 @@ const nextConfig = {
   },
 
   // Custom webpack configuration
-  webpack: (config, { dev, isServer }) => {
+  /**
+   * @param {import('webpack').Configuration} config
+   * @param {Object} options
+   * @param {boolean} options.dev - Whether in development mode
+   * @param {boolean} options.isServer - Whether building for server
+   */
+  webpack: (config, { dev, isServer }) => { // eslint-disable-line no-unused-vars
     // Improved file watching in development
     if (dev) {
       config.watchOptions = {
@@ -77,4 +83,4 @@ const securityHeaders = [
   },
 ];
 
-module.exports = nextConfig;
+export default nextConfig;

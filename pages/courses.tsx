@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Head from "next/head";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiSearch, FiMenu, FiX, FiStar, FiClock, FiUser, FiCheckCircle } from "react-icons/fi";
 import { FaRegBookmark, FaBookmark } from "react-icons/fa";

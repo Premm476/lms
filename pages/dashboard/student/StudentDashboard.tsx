@@ -1,5 +1,4 @@
 import React from 'react'
-import DataTable from '../../../components/DataTableV2'
 import ResponsiveImage from '../../../components/ResponsiveImage'
 import { motion } from 'framer-motion'
 
@@ -46,41 +45,38 @@ export default function StudentDashboardV2() {
       animate="visible"
       className="space-y-6 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto"
     >
-      {/* Enrolled Courses Table */}
-      <DataTable
-        columns={[
-          { 
-            header: 'Course', 
-            accessor: 'title',
-            cell: (_, row) => (
-              <div className="flex items-center">
-                <ResponsiveImage 
-                  src={row.thumbnail} 
-                  alt={row.title} 
-                  width={60} 
-                  height={60}
-                  className="mr-4"
-                />
-                <div>
-                  <p className="font-medium">{row.title}</p>
-                  <p className="text-sm text-gray-500">{row.instructor}</p>
+      {/* Enrolled Courses Table - Temporary Implementation */}
+      <div className="bg-white shadow rounded-xl p-6">
+        <h2 className="text-xl font-semibold mb-4">Enrolled Courses</h2>
+        <div className="space-y-4">
+          {enrolledCourses.map((course) => (
+            <div key={course.id} className="flex items-center border-b pb-4">
+              <ResponsiveImage 
+                src={course.thumbnail} 
+                alt={course.title} 
+                width={60} 
+                height={60}
+                className="mr-4"
+              />
+              <div className="flex-1">
+                <p className="font-medium">{course.title}</p>
+                <p className="text-sm text-gray-500">{course.instructor}</p>
+                <div className="mt-2">
+                  <div className="w-full bg-gray-200 rounded-full h-2.5">
+                    <div 
+                      className="bg-blue-600 h-2.5 rounded-full" 
+                      style={{ width: `${course.progress}%` }}
+                    ></div>
+                  </div>
+                  <p className="text-sm text-gray-500 mt-1">
+                    Progress: {course.progress}% • Next: {course.nextLesson}
+                  </p>
                 </div>
               </div>
-            )
-          },
-          { 
-            header: 'Progress', 
-            accessor: 'progress',
-            cell: (value) => `${value}%`
-          },
-          { 
-            header: 'Next Lesson', 
-            accessor: 'nextLesson' 
-          }
-        ]}
-        data={enrolledCourses}
-        emptyMessage="No enrolled courses available."
-      />
+            </div>
+          ))}
+        </div>
+      </div>
 
       {/* Upcoming Classes */}
       <div className="bg-white shadow rounded-xl p-6">

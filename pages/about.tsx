@@ -3,7 +3,7 @@
 import Head from "next/head";
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { useState } from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 
 export default function About() {

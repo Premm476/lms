@@ -21,7 +21,7 @@ import {
   FiSun
 } from 'react-icons/fi';
 import { FaStar, FaRobot, FaTrophy } from 'react-icons/fa';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import AnalyticsDashboard from '../../../components/AnalyticsDashboard';
 import RecommendationsPanel from '../../../components/RecommendationsPanel';
 import Image from 'next/image';

@@ -1,4 +1,6 @@
-module.exports = {
+/* eslint-env node */
+/* globals process */
+export default {
   plugins: {
     'tailwindcss/nesting': {},
     tailwindcss: {},

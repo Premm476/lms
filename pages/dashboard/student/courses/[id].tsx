@@ -1,6 +1,5 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
 import { 
   FiBook, FiClock, FiBarChart2, 
   FiDownload, FiMessageSquare, FiChevronRight, FiCheckCircle 
@@ -35,7 +34,6 @@ type Course = {
 
 export default function CourseDetail() {
   const { query } = useRouter();
-  const { data: _session } = useSession(); // Prefix with underscore to indicate intentional unused var
   const courseId = query.id as string;
   const [course, setCourse] = useState<Course | null>(null);
   const [loading, setLoading] = useState(true);

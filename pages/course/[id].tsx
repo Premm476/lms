@@ -2,20 +2,18 @@
 
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { FiArrowLeft } from "react-icons/fi";
 
 // Import course data and types from courseApi
 import type { CourseWithDetails } from "lib/courseApi";
-import { getCourse, getCourses } from "lib/courseApi";
+import { getCourse } from "lib/courseApi";
 
 export default function CourseDetail() {
   const router = useRouter();
   const [course, setCourse] = useState<CourseWithDetails | null>(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [_relatedCourses, setRelatedCourses] = useState<CourseWithDetails[]>([]);
-
   // Get course ID from URL
   useEffect(() => {
     const fetchCourse = async () => {
@@ -23,15 +21,7 @@ export default function CourseDetail() {
         const pathSegments = window.location.pathname.split('/');
         const courseId = pathSegments[pathSegments.length - 1];
         const fetchedCourse = await getCourse(courseId);
-        
         setCourse(fetchedCourse);
-        // Get related courses from API
-        const allCourses = await getCourses();
-        setRelatedCourses(
-          allCourses
-            .filter(c => c.category === fetchedCourse.category && c.id !== fetchedCourse.id)
-            .slice(0, 3)
-        );
       } catch (error) {
         console.error('Error fetching course:', error);
         router.push('/courses');

@@ -1,9 +1,6 @@
-import { useSession } from 'next-auth/react';
 import { FiFileText } from 'react-icons/fi';
 
 export default function Assignments() {
-  const { data: _session } = useSession();
-
   const assignments = [
     {
       id: 1,

@@ -3,7 +3,7 @@ import Image from "next/image";
 import Head from "next/head";
 import { motion, useScroll, useSpring } from "framer-motion";
 import Link from "next/link";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import Chatbot from "./Chatbot";
 import { useRouter } from "next/navigation";
 import { FaTwitter, FaLinkedin, FaFacebook, FaInstagram, FaEnvelope, FaPhone, FaMapMarkerAlt } from "react-icons/fa";

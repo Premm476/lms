@@ -1,5 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
-import { useSession } from 'next-auth/react';
+import React, { useState, useEffect, useRef } from 'react';
 import { FiSend, FiMessageSquare, FiUser, FiClock } from 'react-icons/fi';
 
 type Message = {
@@ -10,7 +9,6 @@ type Message = {
 };
 
 export default function Chat() {
-  const { data: _session } = useSession();
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
