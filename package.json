@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "next dev",
     "clean": "rd /s /q .next && rd /s /q node_modules && del package-lock.json && del pnpm-lock.yaml",
-    "vercel-build": "pnpm install --verbose && next build --debug",
+    "vercel-build": "pnpm install -g prisma && pnpm install --verbose && prisma generate && next build --debug",
     "reset": "npm run clean && npm install",
     "build": "next build",
     "start": "next start",
