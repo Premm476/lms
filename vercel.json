@@ -5,13 +5,12 @@
       "src": "package.json",
       "use": "@vercel/next",
       "config": {
-        "distDir": ".next"
+        "forceNpmInstall": true
       }
     }
   ],
-  "build": {
-    "env": {
-      "NEXT_PUBLIC_VERCEL_ENV": "production"
-    }
-  }
+  "installCommand": "npm install --force",
+  "buildCommand": "npm run vercel-build",
+  "framework": "nextjs",
+  "regions": ["iad1"]
 }
