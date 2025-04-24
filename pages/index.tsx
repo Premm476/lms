@@ -1,21 +1,41 @@
 "use client";
+const faqData = [
+  {
+    question: "What courses do you offer?",
+    answer: "We offer a wide range of tech courses including Full Stack Development, Data Science, Cloud Computing, and more."
+  },
+  {
+    question: "How do I enroll in a course?",
+    answer: "You can enroll by creating an account, selecting your desired course, and completing the payment process."
+  },
+  {
+    question: "Do you provide certificates?",
+    answer: "Yes, we provide certificates upon successful completion of each course."
+  },
+  {
+    question: "Can I access the courses on mobile?",
+    answer: "Absolutely! Our platform is fully responsive and accessible on all devices."
+  },
+  {
+    question: "What is the refund policy?",
+    answer: "We offer a 30-day money-back guarantee if you are not satisfied with the course."
+  }
+];
+
 import Image from "next/image";
 import Head from "next/head";
 import { motion, useScroll, useSpring } from "framer-motion";
 import Link from "next/link";
 import React, { useState, useEffect } from "react";
-import Chatbot from "./Chatbot";
 import { useRouter } from "next/navigation";
 import { FaTwitter, FaLinkedin, FaFacebook, FaInstagram, FaEnvelope, FaPhone, FaMapMarkerAlt } from "react-icons/fa";
+import Chatbot from "./Chatbot";
 
 export default function Home() {
   const router = useRouter();
   const [searchTerm, setSearchTerm] = useState("");
-  const [openIndex, setOpenIndex] = useState<number | null>(null);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  useEffect(() => {
-    // Initial load logic can go here if needed
-  }, []);
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
   const { scrollYProgress } = useScroll();
   const scaleX = useSpring(scrollYProgress, {
     stiffness: 100,
@@ -32,12 +52,16 @@ export default function Home() {
     router.push("/login");
   };
 
-  const toggleAnswer = (index: number) => {
-    setOpenIndex(openIndex === index ? null : index);
-  };
-
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
+  };
+
+  const toggleAnswer = (index: number) => {
+    if (openIndex === index) {
+      setOpenIndex(null);
+    } else {
+      setOpenIndex(index);
+    }
   };
 
   useEffect(() => {
@@ -53,25 +77,6 @@ export default function Home() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
-
-  const faqData = [
-    {
-      question: "What is the difference between coding and programming?",
-      answer: "Coding is the process of writing code using a programming language (e.g., Python, JavaScript, C++). It involves translating logical instructions into a syntax that a machine can understand.",
-    },
-    {
-      question: "What are HTML and CSS?",
-      answer: "HTML is the structure of a webpage. It defines the content and layout using elements like headings, paragraphs, images, and links. CSS styles the webpage and controls the layout, colors, and responsiveness.",
-    },
-    {
-      question: "What's the difference between a designer and a developer?",
-      answer: "Both designers and developers play crucial roles in building websites and apps, but they focus on different aspects of the process. Designers create the visual elements and UX, while developers code the functionality.",
-    },
-    {
-      question: "What computer program do people use to write code?",
-      answer: "Developers use code editors and IDEs (Integrated Development Environments) to write and manage their code. Popular options include VS Code, IntelliJ, and PyCharm.",
-    },
-  ];
 
   const courses = [
     { 
@@ -161,9 +166,7 @@ export default function Home() {
                 height={40}
                 className="transition-all duration-300 hover:scale-105"
               />
-              <span className="ml-2 text-xl font-bold bg-gradient-to-r from-yellow-500 to-gray-400 bg-clip-text text-transparent">
-                
-              </span>
+              <span className="ml-2 text-xl font-bold bg-gradient-to-r from-yellow-500 to-gray-400 bg-clip-text text-transparent"></span>
             </motion.div>
           </Link>
 
@@ -179,7 +182,7 @@ export default function Home() {
           </button>
 
           {/* Navigation Links */}
-            <ul className={`md:flex space-x-6 items-center ${isMenuOpen ? "fixed top-16 left-0 right-0 bottom-0 bg-white p-6 shadow-lg flex flex-col space-y-4 overflow-y-auto" : "hidden"}`}>
+          <ul className={`md:flex space-x-6 items-center ${isMenuOpen ? "fixed top-16 left-0 right-0 bottom-0 bg-white p-6 shadow-lg flex flex-col space-y-4 overflow-y-auto" : "hidden"}`}>
             {[
               { name: "Home", link: "/", type: "text" },
               { name: "Courses", link: "/courses", type: "text" },
@@ -190,7 +193,7 @@ export default function Home() {
             ].map((item, index) => (
               <li key={index}>
                 {item.type === "button" ? (
-                  <Link href={item.link}>
+                  <Link href={item.link} passHref>
                     <motion.button
                       className={`px-4 py-2 rounded-lg font-medium shadow-sm transition-all duration-300 ${
                         item.name === "Sign Up" 
@@ -204,7 +207,7 @@ export default function Home() {
                     </motion.button>
                   </Link>
                 ) : (
-                  <Link href={item.link}>
+                  <Link href={item.link} passHref>
                     <motion.div
                       className="relative text-gray-700 font-medium hover:text-yellow-600 transition-all duration-300 group"
                       whileHover={{ scale: 1.05 }}
@@ -229,8 +232,8 @@ export default function Home() {
           <div className="absolute bottom-10 right-10 w-60 h-60 rounded-full bg-gray-300 mix-blend-multiply filter blur-3xl"></div>
         </div>
 
-      <div className="container mx-auto flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
-          {/* Hero Image - Adjusted to take less space and maintain gap */}
+        <div className="container mx-auto flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
+          {/* Hero Image */}
           <motion.div
             className="w-full lg:w-2/5 mb-10 lg:mb-0 px-4 sm:px-0"
             initial={{ x: -50, opacity: 0 }}
@@ -254,7 +257,7 @@ export default function Home() {
             </motion.div>
           </motion.div>
           
-          {/* Hero Content - Adjusted to take more space */}
+          {/* Hero Content */}
           <motion.div
             className="w-full lg:w-3/5 px-4 sm:px-0"
             initial={{ x: 50, opacity: 0 }}
@@ -499,7 +502,7 @@ export default function Home() {
                     )}
                     {index === 1 && (
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0z" />
                       </svg>
                     )}
                     {index === 2 && (
@@ -520,7 +523,7 @@ export default function Home() {
                     )}
                     {index === 5 && (
                       <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0z" />
                       </svg>
                     )}
                   </div>
@@ -624,7 +627,10 @@ export default function Home() {
                       </div>
                       
                       <div className="flex justify-between items-center">
-                        <span className="text-2xl font-bold text-gray-900">{course.price}</span>
+                        <span className="text-2xl font-bold text-gray-900">₹5</span>
+                        <span className="text-sm text-gray-500 line-through ml-2">
+                          ₹{course.price}
+                        </span>
                         <motion.button
                           onClick={(e) => {
                             e.preventDefault();
@@ -645,7 +651,7 @@ export default function Home() {
           </div>
           
           <div className="text-center mt-12">
-            <Link href="/courses">
+            <Link href="/courses" passHref>
               <motion.button
                 className="px-8 py-3 bg-white text-yellow-600 font-medium rounded-lg border border-yellow-600 hover:bg-yellow-50 transition-all duration-300"
                 whileHover={{ scale: 1.05 }}
@@ -658,334 +664,361 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Professional Testimonials Section */}
-      <section className="py-20 bg-white">
-        <div className="container mx-auto px-6">
-          <div className="text-center mb-16">
-            <span className="inline-block px-4 py-1.5 text-sm font-medium text-blue-600 bg-blue-100 rounded-full mb-4">
-              STUDENT SUCCESS
-            </span>
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Transformative <span className="text-blue-600">Learning Experiences</span>
-            </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Join thousands of students who have accelerated their careers with TechSpira
-            </p>
+      {/* Online Exam Section */}
+      <section className="py-20 bg-yellow-50 border-t border-b border-yellow-200">
+        <div className="container mx-auto px-6 text-center">
+          <h2 className="text-4xl font-extrabold text-yellow-600 mb-4">
+            🧪 Take the Java Online Test
+          </h2>
+          <p className="text-lg text-yellow-700 mb-8 max-w-xl mx-auto">
+            Test your Java skills with a 30-minute objective test. Instant results. No login required.
+          </p>
+          <div className="flex justify-center space-x-4">
+            <button
+              onClick={() => router.push('/exam/start')}
+              className="px-8 py-4 bg-yellow-500 text-white rounded-lg font-semibold hover:bg-yellow-600 transition-colors duration-300"
+            >
+              Start Test
+            </button>
+            
+            <button
+              onClick={() => router.push('/exam/check-result')}
+              className="px-8 py-4 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors duration-300"
+            >
+              Check Results
+            </button>
           </div>
-          
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {[
-              {
-                quote: "TechSpira's Full Stack course transformed my career. I went from zero coding experience to landing a developer job in 6 months!",
-                name: "Prem M",
-                role: "Full Stack Developer",
-                company: "TechSpira",
-                avatar: "/images/prem.jpg.png",
-                rating: 5,
-              },
-              {
-                quote: "The instructors are phenomenal. Their real-world experience shines through in every lesson. Worth every penny!",
-                name: "Vidhya",
-                role: "Cloud Engineer",
-                company: "AWS",
-                avatar: "/images/vidhya.jpg.png",
-                rating: 4.5,
-              },
-              {
-                quote: "I tried other platforms before, but TechSpira's project-based approach is what made everything click for me.",
-                name: "Niteesh",
-                role: "Frontend Developer",
-                company: "Microsoft",
-                avatar: "/images/nitesh.jpg",
-                rating: 5,
-              },
-            ].map((testimonial, index) => (
-              <motion.div
-                key={index}
-                className="bg-white p-8 rounded-xl border border-gray-100 hover:border-blue-200 shadow-lg hover:shadow-xl transition-all duration-300 group"
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: index * 0.1 }}
-                whileHover={{ scale: 1.02 }}
-              >
-                <div className="flex flex-col items-center text-center mb-6">
-                  <div className="relative w-24 h-24 mb-4 rounded-full overflow-hidden border-4 border-white shadow-lg">
-                    <Image
-                      src={testimonial.avatar}
-                      alt={testimonial.name}
-                      width={96}
-                      height={96}
-                      className="object-cover w-full h-full"
-                    />
-                  </div>
-                  <div className="flex mb-2">
-                    {[...Array(5)].map((_, i) => (
-                      <svg
-                        key={i}
-                        className={`w-5 h-5 ${i < Math.floor(testimonial.rating) ? 'text-yellow-400' : 'text-gray-300'}`}
-                        fill="currentColor"
-                        viewBox="0 0 20 20"
-                      >
-                        <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                      </svg>
-                    ))}
-                  </div>
-                  <h4 className="text-xl font-bold text-gray-900">{testimonial.name}</h4>
-                  <p className="text-gray-600 text-sm">
-                    {testimonial.role} at {testimonial.company}
-                  </p>
-                </div>
+        </div>
+            </section>
 
-                <div className="relative">
+    {/* Professional Testimonials Section */}
+    <section className="py-20 bg-white">
+    <div className="container mx-auto px-6">
+      <div className="text-center mb-16">
+        <span className="inline-block px-4 py-1.5 text-sm font-medium text-blue-600 bg-blue-100 rounded-full mb-4">
+          STUDENT SUCCESS
+        </span>
+        <h2 className="text-4xl font-bold text-gray-900 mb-4">
+          Transformative <span className="text-blue-600">Learning Experiences</span>
+        </h2>
+        <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          Join thousands of students who have accelerated their careers with TechSpira
+        </p>
+      </div>
+      
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        {[
+          {
+            quote: "TechSpira's Full Stack course transformed my career. I went from zero coding experience to landing a developer job in 6 months!",
+            name: "Prem M",
+            role: "Full Stack Developer",
+            company: "TechSpira",
+            avatar: "/images/prem.jpg.png",
+            rating: 5,
+          },
+          {
+            quote: "The instructors are phenomenal. Their real-world experience shines through in every lesson. Worth every penny!",
+            name: "Vidhya",
+            role: "Cloud Engineer",
+            company: "AWS",
+            avatar: "/images/vidhya.jpg.png",
+            rating: 4.5,
+          },
+          {
+            quote: "I tried other platforms before, but TechSpira's project-based approach is what made everything click for me.",
+            name: "Niteesh",
+            role: "Frontend Developer",
+            company: "Microsoft",
+            avatar: "/images/nitesh.jpg",
+            rating: 5,
+          },
+        ].map((testimonial, index) => (
+          <motion.div
+            key={index}
+            className="bg-white p-8 rounded-xl border border-gray-100 hover:border-blue-200 shadow-lg hover:shadow-xl transition-all duration-300 group"
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: index * 0.1 }}
+            whileHover={{ scale: 1.02 }}
+          >
+            <div className="flex flex-col items-center text-center mb-6">
+              <div className="relative w-24 h-24 mb-4 rounded-full overflow-hidden border-4 border-white shadow-lg">
+                <Image
+                  src={testimonial.avatar}
+                  alt={testimonial.name}
+                  width={96}
+                  height={96}
+                  className="object-cover w-full h-full"
+                />
+              </div>
+              <div className="flex mb-2">
+                {[...Array(5)].map((_, i) => (
                   <svg
-                    className="w-8 h-8 text-gray-200 absolute -top-2 -left-2"
+                    key={i}
+                    className={`w-5 h-5 ${i < Math.floor(testimonial.rating) ? 'text-yellow-400' : 'text-gray-300'}`}
                     fill="currentColor"
-                    viewBox="0 0 24 24"
+                    viewBox="0 0 20 20"
                   >
-                    <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                   </svg>
-                  <p className="text-gray-700 italic pl-6">
-                    {testimonial.quote}
-                  </p>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </div>
-      </section>
+                ))}
+              </div>
+              <h4 className="text-xl font-bold text-gray-900">{testimonial.name}</h4>
+              <p className="text-gray-600 text-sm">
+                {testimonial.role} at {testimonial.company}
+              </p>
+            </div>
 
-      {/* FAQ Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="container mx-auto px-6 max-w-4xl">
-          <div className="text-center mb-16">
-            <span className="inline-block px-3 py-1 text-sm font-medium text-blue-600 bg-blue-100 rounded-full mb-4">
-              HAVE QUESTIONS?
-            </span>
-            <h2 className="text-4xl font-bold text-gray-900 mb-4">
-              Frequently Asked <span className="text-blue-600">Questions</span>
-            </h2>
-            <p className="text-xl text-gray-600">
-              Find answers to common questions about our platform and courses.
-            </p>
-          </div>
-          
-          <div className="space-y-4">
-            {faqData.map((item, index) => (
-              <motion.div
-                key={index}
-                className="rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300"
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
+            <div className="relative">
+              <svg
+                className="w-8 h-8 text-gray-200 absolute -top-2 -left-2"
+                fill="currentColor"
+                viewBox="0 0 24 24"
               >
-                <button
-                  className="w-full flex justify-between items-center p-6 bg-white text-left"
-                  onClick={() => toggleAnswer(index)}
-                  aria-expanded={openIndex === index}
-                  aria-controls={`faq-${index}`}
-                >
-                  <h3 className="text-lg font-medium text-gray-900">{item.question}</h3>
-                  <svg
-                    className={`w-5 h-5 text-blue-600 transition-transform duration-300 ${openIndex === index ? "transform rotate-180" : ""}`}
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
-                </button>
-                <motion.div
-                  id={`faq-${index}`}
-                  className={`overflow-hidden ${openIndex === index ? "max-h-96" : "max-h-0"}`}
-                  initial={{ height: 0 }}
-                  animate={{ height: openIndex === index ? "auto" : 0 }}
-                  transition={{ duration: 0.3 }}
-                >
-                  <div className="p-6 pt-0 bg-white border-t border-gray-100">
-                    <p className="text-gray-600">{item.answer}</p>
-                  </div>
-                </motion.div>
-              </motion.div>
-            ))}
-          </div>
-          
-          <div className="mt-12 text-center">
-            <p className="text-gray-600 mb-6">Still have questions? We're here to help!</p>
-            <Link href="/contact">
-              <motion.button
-                className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                Contact Support
-              </motion.button>
-            </Link>
-          </div>
-        </div>
-      </section>
+                <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+              </svg>
+              <p className="text-gray-700 italic pl-6">
+                {testimonial.quote}
+              </p>
+            </div>
+          </motion.div>
+        ))}
+      </div>
+    </div>
+  </section>
 
-      {/* CTA Section */}
-      <section className="relative py-20 bg-gradient-to-r from-blue-600 to-purple-600 overflow-hidden">
-        <div className="absolute top-0 left-0 w-full h-full opacity-10">
-          <div className="absolute top-20 left-10 w-40 h-40 rounded-full bg-white mix-blend-overlay filter blur-xl"></div>
-          <div className="absolute bottom-10 right-10 w-60 h-60 rounded-full bg-white mix-blend-overlay filter blur-xl"></div>
+  {/* FAQ Section */}
+  <section className="py-20 bg-gray-50">
+    <div className="container mx-auto px-6 max-w-4xl">
+      <div className="text-center mb-16">
+        <span className="inline-block px-3 py-1 text-sm font-medium text-blue-600 bg-blue-100 rounded-full mb-4">
+          HAVE QUESTIONS?
+        </span>
+        <h2 className="text-4xl font-bold text-gray-900 mb-4">
+          Frequently Asked <span className="text-blue-600">Questions</span>
+        </h2>
+        <p className="text-xl text-gray-600">
+          Find answers to common questions about our platform and courses.
+        </p>
+      </div>
+      
+      <div className="space-y-4">
+        {faqData.map((item, index) => (
+          <motion.div
+            key={index}
+            className="rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
+          >
+            <button
+              className="w-full flex justify-between items-center p-6 bg-white text-left"
+              onClick={() => toggleAnswer(index)}
+              aria-expanded={openIndex === index}
+              aria-controls={`faq-${index}`}
+            >
+              <h3 className="text-lg font-medium text-gray-900">{item.question}</h3>
+              <svg
+                className={`w-5 h-5 text-blue-600 transition-transform duration-300 ${openIndex === index ? "transform rotate-180" : ""}`}
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            <motion.div
+              id={`faq-${index}`}
+              className={`overflow-hidden ${openIndex === index ? "max-h-96" : "max-h-0"}`}
+              initial={{ height: 0 }}
+              animate={{ height: openIndex === index ? "auto" : 0 }}
+              transition={{ duration: 0.3 }}
+            >
+              <div className="p-6 pt-0 bg-white border-t border-gray-100">
+                <p className="text-gray-600">{item.answer}</p>
+              </div>
+            </motion.div>
+          </motion.div>
+        ))}
+      </div>
+      
+      <div className="mt-12 text-center">
+        <p className="text-gray-600 mb-6">Still have questions? We're here to help!</p>
+        <Link href="/contact" passHref>
+          <motion.button
+            className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 text-white font-medium rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            Contact Support
+          </motion.button>
+        </Link>
+      </div>
+    </div>
+  </section>
+
+  {/* CTA Section */}
+  <section className="relative py-20 bg-gradient-to-r from-blue-600 to-purple-600 overflow-hidden">
+    <div className="absolute top-0 left-0 w-full h-full opacity-10">
+      <div className="absolute top-20 left-10 w-40 h-40 rounded-full bg-white mix-blend-overlay filter blur-xl"></div>
+      <div className="absolute bottom-10 right-10 w-60 h-60 rounded-full bg-white mix-blend-overlay filter blur-xl"></div>
+    </div>
+    
+    <div className="container mx-auto px-6 relative z-10">
+      <div className="text-center">
+        <h2 className="text-4xl font-bold text-white mb-6">Ready to Transform Your Career?</h2>
+        <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
+          Join thousands of students who have accelerated their careers with TechSpira.
+        </p>
+          <div className="flex flex-col md:flex-row gap-4 justify-center">
+          <motion.button
+            onClick={handleEnroll}
+            className="px-8 py-3 bg-white text-blue-600 font-bold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            Get Started Now
+          </motion.button>
+          <Link href="/contact">
+            <motion.button
+              className="px-8 py-3 border-2 border-white text-white font-bold rounded-lg hover:bg-white/10 transition-all duration-300"
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+            >
+              Speak to an Advisor
+            </motion.button>
+          </Link>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  {/* Professional Footer */}
+  <footer className="bg-gray-900 text-white py-16">
+    <div className="container mx-auto px-6">
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
+        <div>
+          <Link href="/" passHref className="flex items-center mb-6">
+            <Image 
+              src="/images/elearning.jpg.png" 
+              alt="TechSpira Logo" 
+              width={160} 
+              height={40}
+              style={{ width: 'auto' }}
+            />
+          </Link>
+          <p className="text-gray-400 text-sm leading-relaxed">
+            Empowering the next generation of tech professionals through
+            immersive learning experiences and industry-relevant curriculum.
+          </p>
+          <div className="flex space-x-4 mt-6">
+            <a href="#" className="text-gray-400 hover:text-white transition-colors">
+              <FaTwitter className="w-5 h-5" />
+            </a>
+            <a href="#" className="text-gray-400 hover:text-white transition-colors">
+              <FaLinkedin className="w-5 h-5" />
+            </a>
+            <a href="#" className="text-gray-400 hover:text-white transition-colors">
+              <FaFacebook className="w-5 h-5" />
+            </a>
+            <a href="#" className="text-gray-400 hover:text-white transition-colors">
+              <FaInstagram className="w-5 h-5" />
+            </a>
+          </div>
         </div>
         
-        <div className="container mx-auto px-6 relative z-10">
-          <div className="text-center">
-            <h2 className="text-4xl font-bold text-white mb-6">Ready to Transform Your Career?</h2>
-            <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
-              Join thousands of students who have accelerated their careers with TechSpira.
-            </p>
-              <div className="flex flex-col md:flex-row gap-4 justify-center">
-              <motion.button
-                onClick={handleEnroll}
-                className="px-8 py-3 bg-white text-blue-600 font-bold rounded-lg shadow-lg hover:shadow-xl transition-all duration-300"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                Get Started Now
-              </motion.button>
-              <Link href="/contact">
-                <motion.button
-                  className="px-8 py-3 border-2 border-white text-white font-bold rounded-lg hover:bg-white/10 transition-all duration-300"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  Speak to an Advisor
-                </motion.button>
+        <div>
+          <h4 className="text-lg font-semibold mb-6 pb-2 border-b border-gray-800">Quick Links</h4>
+          <ul className="space-y-3">
+            <li>
+              <Link href="/" passHref className="text-gray-400 hover:text-white transition-colors">
+                Home
               </Link>
-            </div>
-          </div>
+            </li>
+            <li>
+              <Link href="/courses" passHref className="text-gray-400 hover:text-white transition-colors">
+                Courses
+              </Link>
+            </li>
+            <li>
+              <Link href="/about" passHref className="text-gray-400 hover:text-white transition-colors">
+                About Us
+              </Link>
+            </li>
+            <li>
+              <Link href="/contact" passHref className="text-gray-400 hover:text-white transition-colors">
+                Contact
+              </Link>
+            </li>
+          </ul>
         </div>
-      </section>
-
-      {/* Professional Footer */}
-      <footer className="bg-gray-900 text-white py-16">
-        <div className="container mx-auto px-6">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
-            <div>
-              <Link href="/" className="flex items-center mb-6">
-                <Image 
-                  src="/images/elearning.jpg.png" 
-                  alt="TechSpira Logo" 
-                  width={160} 
-                  height={40}
-                  style={{ width: 'auto' }}
-                />
+        
+        <div>
+          <h4 className="text-lg font-semibold mb-6 pb-2 border-b border-gray-800">Popular Courses</h4>
+          <ul className="space-y-3">
+            <li>
+              <Link href="/courses/full-stack" passHref className="text-gray-400 hover:text-white transition-colors">
+                Full Stack Development
               </Link>
-              <p className="text-gray-400 text-sm leading-relaxed">
-                Empowering the next generation of tech professionals through
-                immersive learning experiences and industry-relevant curriculum.
-              </p>
-              <div className="flex space-x-4 mt-6">
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                  <FaTwitter className="w-5 h-5" />
-                </a>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                  <FaLinkedin className="w-5 h-5" />
-                </a>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                  <FaFacebook className="w-5 h-5" />
-                </a>
-                <a href="#" className="text-gray-400 hover:text-white transition-colors">
-                  <FaInstagram className="w-5 h-5" />
-                </a>
-              </div>
-            </div>
-            
-            <div>
-              <h4 className="text-lg font-semibold mb-6 pb-2 border-b border-gray-800">Quick Links</h4>
-              <ul className="space-y-3">
-                <li>
-                  <Link href="/" className="text-gray-400 hover:text-white transition-colors">
-                    Home
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/courses" className="text-gray-400 hover:text-white transition-colors">
-                    Courses
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/about" className="text-gray-400 hover:text-white transition-colors">
-                    About Us
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/contact" className="text-gray-400 hover:text-white transition-colors">
-                    Contact
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            
-            <div>
-              <h4 className="text-lg font-semibold mb-6 pb-2 border-b border-gray-800">Popular Courses</h4>
-              <ul className="space-y-3">
-                <li>
-                  <Link href="/course/full-stack" className="text-gray-400 hover:text-white transition-colors">
-                    Full Stack Development
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/course/data-science" className="text-gray-400 hover:text-white transition-colors">
-                    Data Science & AI
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/course/cloud" className="text-gray-400 hover:text-white transition-colors">
-                    Cloud Engineering
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/course/devops" className="text-gray-400 hover:text-white transition-colors">
-                    DevOps & CI/CD
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            
-            <div>
-              <h4 className="text-lg font-semibold mb-6 pb-2 border-b border-gray-800">Contact Us</h4>
-              <ul className="space-y-3 text-gray-400">
-                <li className="flex items-start">
-                  <FaEnvelope className="mt-1 mr-3 flex-shrink-0" />
-                  <span>info@techspira.com</span>
-                </li>
-                <li className="flex items-start">
-                  <FaPhone className="mt-1 mr-3 flex-shrink-0" />
-                  <span>+1 (555) 123-4567</span>
-                </li>
-                <li className="flex items-start">
-                  <FaMapMarkerAlt className="mt-1 mr-3 flex-shrink-0" />
-                  <span>123 Tech Street, San Francisco, CA</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-          
-          <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-400 text-sm mb-4 md:mb-0">
-              © {new Date().getFullYear()} TechSpira. All rights reserved.
-            </p>
-            <div className="flex space-x-6">
-              <Link href="/privacy" className="text-gray-400 hover:text-white text-sm transition-colors">
-                Privacy Policy
+            </li>
+            <li>
+              <Link href="/courses/data-science" passHref className="text-gray-400 hover:text-white transition-colors">
+                Data Science & AI
               </Link>
-              <Link href="/terms" className="text-gray-400 hover:text-white text-sm transition-colors">
-                Terms of Service
+            </li>
+            <li>
+              <Link href="/courses/cloud" passHref className="text-gray-400 hover:text-white transition-colors">
+                Cloud Engineering
               </Link>
-              <Link href="/cookies" className="text-gray-400 hover:text-white text-sm transition-colors">
-                Cookie Policy
+            </li>
+            <li>
+              <Link href="/courses/devops" passHref className="text-gray-400 hover:text-white transition-colors">
+                DevOps & CI/CD
               </Link>
-            </div>
-          </div>
+            </li>
+          </ul>
         </div>
-      </footer>
-
-      {/* Chatbot with WhatsApp Integration */}
-      <Chatbot />
+        
+        <div>
+          <h4 className="text-lg font-semibold mb-6 pb-2 border-b border-gray-800">Contact Us</h4>
+          <ul className="space-y-3 text-gray-400">
+            <li className="flex items-start">
+              <FaEnvelope className="mt-1 mr-3 flex-shrink-0" />
+              <span>info@techspira.com</span>
+            </li>
+            <li className="flex items-start">
+              <FaPhone className="mt-1 mr-3 flex-shrink-0" />
+              <span>+1 (555) 123-4567</span>
+            </li>
+            <li className="flex items-start">
+              <FaMapMarkerAlt className="mt-1 mr-3 flex-shrink-0" />
+              <span>123 Tech Street, San Francisco, CA</span>
+            </li>
+          </ul>
+        </div>
+      </div>
+      
+      <div className="border-t border-gray-800 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
+        <p className="text-gray-400 text-sm mb-4 md:mb-0">
+          © {new Date().getFullYear()} TechSpira. All rights reserved.
+        </p>
+        <div className="flex space-x-6">
+          <Link href="/privacy" passHref className="text-gray-400 hover:text-white text-sm transition-colors">
+            Privacy Policy
+          </Link>
+          <Link href="/terms" passHref className="text-gray-400 hover:text-white text-sm transition-colors">
+            Terms of Service
+          </Link>
+          <Link href="/cookies" passHref className="text-gray-400 hover:text-white text-sm transition-colors">
+            Cookie Policy
+          </Link>
+        </div>
+      </div>
     </div>
+  </footer>
+
+  {/* Chatbot with WhatsApp Integration */}
+  <Chatbot />
+</div>
   );
 }

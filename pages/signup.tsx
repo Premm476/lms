@@ -154,6 +154,20 @@ export default function Signup() {
         throw new Error(data.message || "Registration failed. Please try again.");
       }
 
+      // After successful registration, check for completed orders without enrollment and create enrollments
+      try {
+        const enrollRes = await fetch('/api/student/enroll-from-orders', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email: formData.email }),
+        });
+        if (!enrollRes.ok) {
+          console.error('Failed to enroll from orders');
+        }
+      } catch (enrollErr) {
+        console.error('Error enrolling from orders:', enrollErr);
+      }
+
       // On success, redirect to login with success state
       router.push("/login?registered=true&email=" + encodeURIComponent(formData.email));
       

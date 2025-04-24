@@ -1,4 +1,3 @@
-// pages/chatbot.tsx
 "use client";
 import React, { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -9,596 +8,196 @@ export default function ChatbotPage() {
   const [messages, setMessages] = useState<Array<{ text: string; sender: "user" | "bot" }>>([]);
   const [inputValue, setInputValue] = useState("");
 
+  // Sample knowledge base with 20 questions and professional, rich answers including casual greetings
   const lmsKnowledgeBase = [
-    // Course enrollment questions (with partial matching)
-    {
-      question: /course.*available|what.*learn|available.*courses/i,
-      answer: "We offer courses in Web Development, Data Science, AI/ML, and more. Visit our Courses page for details."
-    },
-    {
-      question: /enroll|register|join|sign.*up/i,
-      answer: "Go to the Courses page and click 'Enroll Now' on any course."
-    },
-    {
-      question: /retake|restart|start.*again/i,
-      answer: "Yes, just click 'Retake' on the completed course card."
-    },
-    {
-      question: /self.*paced|pace.*own/i,
-      answer: "Most are! Some may include live sessions too."
-    },
-    {
-      question: /pause.*course|continue.*later|stop.*continue/i,
-      answer: "Yes! Your progress is saved automatically."
-    },
-    {
-      question: /prereq|required.*knowledge|before.*start/i,
-      answer: "Some advanced courses may require basic knowledge of the subject."
-    },
-    {
-      question: /duration|how.*long|length|weeks.*complete/i,
-      answer: "It varies, but most range from 2-8 weeks."
-    },
-    {
-      question: /course.*limit|how.*many|multiple.*courses/i,
-      answer: "No limit! You can enroll in as many as you like."
-    },
-    {
-      question: /search.*course|find.*course|filter.*courses/i,
-      answer: "Use the search bar or apply filters on the Courses page."
-    },
-    {
-      question: /preview|sample|try.*before|free.*look/i,
-      answer: "Yes! Each course includes a free preview section."
-    },
-    {
-      question: /quiz|assignment|test|exercise/i,
-      answer: "Yes, all courses include interactive tasks."
-    },
-    {
-      question: /discussion|forum|ask.*question|community/i,
-      answer: "Most courses include a forum for discussions."
-    },
-    {
-      question: /rate|review|feedback.*course/i,
-      answer: "Yes! Leave a rating and review after completion."
-    },
-    {
-      question: /resume.*course|continue.*learning|pick.*up/i,
-      answer: "Click 'Continue Learning' from your dashboard."
-    },
-    {
-      question: /mobile|phone|tablet|device.*support/i,
-      answer: "Absolutely! Our platform is optimized for all devices."
-    },
-    {
-      question: /change.*course|switch.*course|different.*course/i,
-      answer: "Yes, you can switch before completing 20% of the course."
-    },
-    {
-      question: /lesson.*format|text|video|pdf|exercise/i,
-      answer: "We offer both, along with PDFs and practice exercises."
-    },
-    {
-      question: /lesson.*notes|take.*notes|note.*taking/i,
-      answer: "Go to the lesson and click the 'Notes' tab."
-    },
-    {
-      question: /difficulty|level|beginner|intermediate|advanced/i,
-      answer: "It's designed for [Beginner/Intermediate/Advanced] learners."
-    },
-    {
-      question: /project|hands.*on|practice|build.*something/i,
-      answer: "Yes! Most courses include capstone projects."
-    },
-
-    // Student progress questions (with partial matching)
-    {
-      question: /enrolled.*courses|my.*courses|current.*learning/i,
-      answer: "You're currently enrolled in [Course List]."
-    },
-    {
-      question: /how.*completed|progress|percentage.*done/i,
-      answer: "You've completed 45% of [Course Name]."
-    },
-    {
-      question: /overall.*progress|learning.*status|how.*doing/i,
-      answer: "Your dashboard shows progress for each course."
-    },
-    {
-      question: /quiz.*score|test.*result|grade|performance/i,
-      answer: "Yes, under the 'Performance' tab in your course."
-    },
-    {
-      question: /learning.*history|past.*activity|history/i,
-      answer: "Go to your Profile > Learning History."
-    },
-    {
-      question: /reminder|notification|alert|email.*update/i,
-      answer: "Yes, you'll get email and in-app notifications."
-    },
-    {
-      question: /mark.*complete|finish.*lesson|done.*lesson/i,
-      answer: "Click the 'Mark Complete' button at the end of the lesson."
-    },
-    {
-      question: /downloaded.*lessons|offline.*content|save.*lessons/i,
-      answer: "In the 'My Library' tab on your dashboard."
-    },
-    {
-      question: /completed.*courses|finished.*courses|done.*courses/i,
-      answer: "Yes, check the 'Completed' section in your dashboard."
-    },
-    {
-      question: /leaderboard|ranking|compare.*others/i,
-      answer: "It ranks students based on course performance. Check the 'Leaderboard' tab."
-    },
-    {
-      question: /xp|experience.*points|points.*earn/i,
-      answer: "By completing lessons, quizzes, and engaging in discussions."
-    },
-    {
-      question: /streak|daily.*login|consecutive.*days/i,
-      answer: "Daily login streaks reward consistent learners."
-    },
-    {
-      question: /reset.*progress|start.*over|clear.*progress/i,
-      answer: "Go to course settings and select 'Reset Progress'."
-    },
-    {
-      question: /customize.*dashboard|rearrange.*widgets|personalize/i,
-      answer: "Yes, drag and drop widgets to rearrange them."
-    },
-    {
-      question: /progress.*bar|completion.*meter|how.*far/i,
-      answer: "It shows how much of the course you've completed."
-    },
-    {
-      question: /assignment.*deadline|due.*date|when.*due/i,
-      answer: "View the calendar or course overview section."
-    },
-    {
-      question: /export.*data|learning.*summary|download.*progress/i,
-      answer: "Yes, go to Profile > Export Learning Summary."
-    },
-    {
-      question: /average.*score|grade.*average|overall.*grade/i,
-      answer: "Your current average score is 87%."
-    },
-    {
-      question: /badge|achievement|reward|milestone/i,
-      answer: "By completing milestones in your learning journey."
-    },
-    {
-      question: /notebook|notes|jot.*down|write.*notes/i,
-      answer: "It lets you jot down notes while studying."
-    },
-    {
-      question: /sync.*progress|multiple.*devices|continue.*anywhere/i,
-      answer: "Yes! Everything is synced to your account in real-time."
-    },
-
-    // Certificate questions (with partial matching)
-    {
-      question: /cert.*complete|get cert|complete.*cert/i,
-      answer: "Yes! Complete all lessons and quizzes to receive your certificate."
-    },
-    {
-      question: /down.*cert|cert.*down/i,
-      answer: "Go to your Dashboard > Certificates tab to view and download it."
-    },
-    {
-      question: /share.*cert|linkedin.*cert|cert.*linkedin/i,
-      answer: "Yes! You'll get a LinkedIn-friendly link after completion."
-    },
-    {
-      question: /hard.*cert|cert.*hard|physical.*cert/i,
-      answer: "Currently, we provide only digital certificates."
-    },
-    {
-      question: /verify.*cert|cert.*verify|valid.*cert/i,
-      answer: "Yes, each certificate has a unique verification code."
-    },
-    {
-      question: /name.*cert|cert.*name|wrong.*name/i,
-      answer: "Go to Profile > Edit Name and re-download the certificate."
-    },
-    {
-      question: /fee.*cert|cert.*cost|price.*cert/i,
-      answer: "No! It's free if you complete the course. Some premium courses may charge extra."
-    },
-    {
-      question: /free.*cert|cert.*free/i,
-      answer: "Yes, if the free course includes assessment."
-    },
-    {
-      question: /when.*cert|cert.*when|time.*cert/i,
-      answer: "Instantly, once you complete all modules and pass the final quiz."
-    },
-    {
-      question: /social.*cert|cert.*social|share.*media/i,
-      answer: "Absolutely! Use the 'Share' button under your certificate."
-    },
-
-    // Instructor questions (with partial matching)
-    {
-      question: /upload.*course|add.*content|create.*lesson/i,
-      answer: "Go to Instructor Panel > Add Course, and follow the steps."
-    },
-    {
-      question: /edit.*course|update.*content|modify.*lesson/i,
-      answer: "Navigate to My Courses > Edit, make your changes, and save."
-    },
-    {
-      question: /delete.*lesson|remove.*content|erase.*module/i,
-      answer: "Yes, just go to the lesson list and click the trash icon next to it."
-    },
-    {
-      question: /add.*quiz|create.*test|make.*assessment/i,
-      answer: "While editing your course, click 'Add Quiz' under the appropriate module."
-    },
-    {
-      question: /track.*student|monitor.*progress|view.*stats/i,
-      answer: "Use the Analytics section in your Instructor Dashboard."
-    },
-    {
-      question: /message.*students|announce.*class|notify.*learners/i,
-      answer: "Yes! You can send announcements through your course dashboard."
-    },
-    {
-      question: /assign.*live|schedule.*class|host.*session/i,
-      answer: "Yes. Go to 'Live Sessions' and schedule one with a Zoom/Google Meet link."
-    },
-    {
-      question: /respond.*student|answer.*question|reply.*query/i,
-      answer: "Check the 'Discussions' tab or your Instructor Inbox."
-    },
-    {
-      question: /offer.*discount|create.*coupon|set.*price/i,
-      answer: "Yes, create a coupon code in the Pricing section."
-    },
-    {
-      question: /see.*reviews|view.*feedback|check.*ratings/i,
-      answer: "Go to My Courses > Reviews to manage and respond."
-    },
-
-    // Platform support questions (with partial matching)
-    {
-      question: /forgot.*password|reset.*login|recover.*account/i,
-      answer: "Click 'Forgot Password' on the login page to reset via email."
-    },
-    {
-      question: /sign.*in.*google|login.*github|social.*auth/i,
-      answer: "Yes! Use the social login buttons on the login page."
-    },
-    {
-      question: /course.*load|page.*stuck|content.*show/i,
-      answer: "Try refreshing the page or clearing your browser cache."
-    },
-    {
-      question: /report.*bug|submit.*issue|found.*problem/i,
-      answer: "Use the 'Report Issue' button in your profile or chat support."
-    },
-    {
-      question: /change.*email|update.*address|modify.*contact/i,
-      answer: "Yes, go to Profile > Edit > Update Email."
-    },
-    {
-      question: /enable.*dark|switch.*theme|night.*mode/i,
-      answer: "Use the theme toggle at the bottom of the sidebar."
-    },
-    {
-      question: /contact.*support|help.*needed|talk.*staff/i,
-      answer: "Use the chatbot, or email support@example.com for help."
-    },
-    {
-      question: /delete.*account|remove.*profile|close.*account/i,
-      answer: "Yes, go to Profile > Settings > Delete Account. This action is irreversible."
-    },
-    {
-      question: /courses.*saved|progress.*stored|data.*kept/i,
-      answer: "Absolutely! Your progress is tied to your account."
-    },
-    {
-      question: /browsers.*work|supported.*devices|compatible.*browser/i,
-      answer: "Chrome, Firefox, Edge, Safari, and Brave are fully supported."
-    },
-
-    // Payment questions (with partial matching)
-    {
-      question: /pay.*course|buy.*content|purchase.*access/i,
-      answer: "Use Razorpay with UPI, cards, or net banking at checkout."
-    },
-    {
-      question: /get.*refund|return.*payment|cancel.*purchase/i,
-      answer: "Yes, we offer a 7-day refund policy for most paid courses."
-    },
-    {
-      question: /payment.*failed|transaction.*declined|card.*rejected/i,
-      answer: "Try again or check your bank for details. Still stuck? Contact support."
-    },
-    {
-      question: /subscription.*plan|monthly.*access|yearly.*membership/i,
-      answer: "Yes! We offer monthly and yearly plans for unlimited access."
-    },
-    {
-      question: /discount.*student|edu.*offer|academic.*price/i,
-      answer: "Yes! Apply your student ID for 20% off selected plans."
-    },
-
-    // General questions (with partial matching)
-    {
-      question: /popular.*course|trending.*now|best.*selling/i,
-      answer: "'Mastering React with TypeScript' is trending this week!"
-    },
-    {
-      question: /connect.*learners|meet.*students|join.*community/i,
-      answer: "Yes! Join course-based discussion forums or our Discord server."
-    },
-    {
-      question: /mobile.*app|phone.*version|download.*app/i,
-      answer: "Yes! Download our app from Google Play or the App Store."
-    },
-    {
-      question: /refer.*friend|invite.*peer|share.*code/i,
-      answer: "Go to the 'Referral' section in your dashboard and share your invite code."
-    },
-    {
-      question: /become.*mentor|apply.*instructor|teach.*course/i,
-      answer: "Yes! Apply through the Instructor portal to become a verified mentor."
-    },
-
-    // Study assistant questions (with partial matching)
-    {
-      question: /closure.*js|function.*scope|lexical.*env/i,
-      answer: "A closure is when a function retains access to its outer scope even after the outer function has finished."
-    },
-    {
-      question: /summarize|summary|key.*points/i,
-      answer: "Sure! Here's a quick summary of the key points: [Summary]."
-    },
-    {
-      question: /react.*hooks|use.*state|functional.*components/i,
-      answer: "Hooks let you use state and lifecycle features in functional components."
-    },
-    {
-      question: /==.*===|triple.*equals|strict.*comparison/i,
-      answer: "== checks value equality; === checks value and type."
-    },
-    {
-      question: /responsive.*layout|css.*grid|flex.*design/i,
-      answer: "Use flexbox or grid and apply media queries."
-    },
-    {
-      question: /quiz.*python|test.*knowledge|python.*questions/i,
-      answer: "Here are 5 quick questions to test your knowledge: [Quiz]."
-    },
-    {
-      question: /translate.*hindi|hindi.*version|content.*hindi/i,
-      answer: "Sure! [Translated content]."
-    },
-    {
-      question: /learn.*fast|quick.*study|speed.*learning/i,
-      answer: "Practice daily, build projects, and revise concepts regularly."
-    },
-    {
-      question: /projects.*beginner|first.*project|starter.*ideas/i,
-      answer: "Try building a portfolio site, calculator, or to-do app."
-    },
-    {
-      question: /recommend.*course|suggest.*class|what.*learn.*next/i,
-      answer: "Based on your learning, you might like: [Course List]."
-    },
-    {
-      question: /for.*loop.*python|python.*iteration|repeat.*code/i,
-      answer: "for i in range(5): print(i)"
-    },
-    {
-      question: /flashcards.*html|html.*cards|study.*cards/i,
-      answer: "Sure! Here's a deck of flashcards: [HTML Flashcards]."
-    },
-    {
-      question: /merge.*conflict|git.*problem|resolve.*changes/i,
-      answer: "Edit the conflicted file, remove conflict markers, and commit the changes."
-    },
-    {
-      question: /what.*api|api.*explain|application.*interface/i,
-      answer: "An API lets two software applications talk to each other."
-    },
-    {
-      question: /practice.*test.*java|java.*quiz|test.*java/i,
-      answer: "Here's a 10-question test on Java basics."
-    },
-    {
-      question: /sql.*joins|database.*join|relate.*tables/i,
-      answer: "Sure! Here's a guide on INNER, LEFT, RIGHT, and FULL joins."
-    },
-    {
-      question: /what.*dom|document.*object|html.*tree/i,
-      answer: "DOM stands for Document Object Model — it's how the browser sees your HTML."
-    },
-    {
-      question: /revision.*plan|study.*schedule|learning.*calendar/i,
-      answer: "Yes! Here's a weekly schedule tailored to your course."
-    },
-    {
-      question: /put.*patch|http.*methods|update.*resource/i,
-      answer: "PUT replaces the entire resource; PATCH updates part of it."
-    },
-    {
-      question: /recursion|function.*itself|base.*case/i,
-      answer: "It's when a function calls itself until it reaches a base condition."
-    },
-
-    // Additional questions (40 more)
-    {
-      question: /course.*completion|finish.*course|complete.*all/i,
-      answer: "You must complete all lessons and pass all quizzes to finish a course."
-    },
-    {
-      question: /certificate.*expire|valid.*how.*long|cert.*duration/i,
-      answer: "Certificates don't expire but may need updating for major course revisions."
-    },
-    {
-      question: /group.*discount|team.*pricing|bulk.*enrollment/i,
-      answer: "Yes! Contact sales for group discounts on 5+ enrollments."
-    },
-    {
-      question: /course.*updates|content.*changed|new.*version/i,
-      answer: "Updated content is marked with a 'New' badge and added to your progress."
-    },
-    {
-      question: /instructor.*qualifications|teacher.*credentials/i,
-      answer: "All instructors are industry experts with 5+ years experience."
-    },
-    {
-      question: /course.*syllabus|what.*covered|topics.*list/i,
-      answer: "The full syllabus is available on each course's overview page."
-    },
-    {
-      question: /language.*options|translate.*content|available.*languages/i,
-      answer: "Currently we support English, Hindi and Spanish subtitles."
-    },
-    {
-      question: /download.*videos|save.*lessons|offline.*access/i,
-      answer: "Yes, use the download button on video lessons for offline viewing."
-    },
-    {
-      question: /course.*updates|notified.*changes|content.*updates/i,
-      answer: "You'll get notifications when courses you're enrolled in are updated."
-    },
-    {
-      question: /learning.*path|what.*next|recommended.*path/i,
-      answer: "Check our Learning Paths section for guided course sequences."
-    },
-    {
-      question: /instructor.*contact|message.*teacher|ask.*instructor/i,
-      answer: "Use the 'Ask Instructor' button in your course dashboard."
-    },
-    {
-      question: /course.*prerequisites|required.*before|what.*know.*first/i,
-      answer: "Prerequisites are listed on each course description page."
-    },
-    {
-      question: /refund.*policy|money.*back|cancel.*enrollment/i,
-      answer: "7-day refunds available if you complete less than 20% of content."
-    },
-    {
-      question: /payment.*methods|accepted.*cards|how.*pay/i,
-      answer: "We accept all major credit cards, UPI, net banking and PayPal."
-    },
-    {
-      question: /course.*updates|how.*often|content.*freshness/i,
-      answer: "Courses are reviewed and updated at least twice per year."
-    },
-    {
-      question: /technical.*requirements|computer.*needs|system.*specs/i,
-      answer: "Most courses require a modern browser and internet connection."
-    },
-    {
-      question: /course.*certificate|get.*cert|earn.*certification/i,
-      answer: "Complete all course requirements to automatically earn your certificate."
-    },
-    {
-      question: /learning.*resources|extra.*materials|additional.*content/i,
-      answer: "Check the Resources tab in each course for bonus materials."
-    },
-    {
-      question: /course.*difficulty|how.*hard|challenge.*level/i,
-      answer: "Difficulty is rated from 1-5 stars on each course page."
-    },
-    {
-      question: /time.*commitment|hours.*per.*week|study.*time/i,
-      answer: "Most courses suggest 3-5 hours per week for optimal learning."
-    },
-    {
-      question: /course.*recommendations|what.*take.*next|suggested.*path/i,
-      answer: "Our recommendation engine suggests courses based on your progress."
-    },
-    {
-      question: /instructor.*response|how.*long.*reply|answer.*time/i,
-      answer: "Instructors typically respond within 24-48 hours."
-    },
-    {
-      question: /course.*access|how.*long.*available|expire.*content/i,
-      answer: "You get lifetime access to all courses you enroll in."
-    },
-    {
-      question: /mobile.*app|download.*app|phone.*learning/i,
-      answer: "Our mobile app is available on iOS and Android app stores."
-    },
-    {
-      question: /course.*updates|how.*stay.*updated|new.*content/i,
-      answer: "Follow your favorite courses to get update notifications."
-    },
-    {
-      question: /learning.*analytics|track.*progress|stats.*performance/i,
-      answer: "Your dashboard shows detailed learning analytics and insights."
-    },
-    {
-      question: /course.*comparison|which.*better|compare.*options/i,
-      answer: "Use our Course Comparison tool to evaluate different options."
-    },
-    {
-      question: /instructor.*background|teacher.*experience|credentials/i,
-      answer: "Instructor bios and credentials are listed on each course page."
-    },
-    {
-      question: /course.*preview|free.*content|try.*before/i,
-      answer: "All courses offer free preview lessons before enrollment."
-    },
-    {
-      question: /learning.*community|join.*students|network.*peers/i,
-      answer: "Join our Discord server to connect with other learners."
-    },
-    {
-      question: /course.*version|latest.*update|when.*updated/i,
-      answer: "The current version and last update date are shown on each course."
-    },
-    {
-      question: /technical.*support|help.*center|contact.*help/i,
-      answer: "Visit our Help Center or email support@example.com for assistance."
-    },
-    {
-      question: /course.*completion|how.*long.*finish|time.*complete/i,
-      answer: "Completion time varies based on your pace and course length."
-    },
-    {
-      question: /learning.*goals|set.*objectives|track.*achievements/i,
-      answer: "Set and track learning goals in your profile settings."
-    },
-    {
-      question: /course.*quality|how.*good|content.*standards/i,
-      answer: "All courses undergo rigorous quality review before publishing."
-    },
-    {
-      question: /instructor.*rating|teacher.*reviews|feedback.*instructor/i,
-      answer: "Instructor ratings are shown on their profile and course pages."
-    },
-    {
-      question: /course.*search|find.*content|discover.*courses/i,
-      answer: "Use keywords, filters and categories to find perfect courses."
-    },
-    {
-      question: /learning.*reminders|study.*schedule|notifications/i,
-      answer: "Set custom reminders in your account notification settings."
-    },
-    {
-      question: /course.*value|worth.*it|return.*investment/i,
-      answer: "Our students report significant career benefits from our courses."
-    }
+    { question: /^hi$|^hello$|^hey$|^good morning$|^good afternoon$|^good evening$/i, answer: "Hello! How can I assist you with TechSpira today? Feel free to ask any questions about our courses, enrollment, or platform." },
+    { question: /what is techspira/i, answer: "TechSpira is a comprehensive learning management system offering a wide range of courses in technology, data science, AI, and more, designed to help you upskill and advance your career." },
+    { question: /how do i enroll in a course/i, answer: "To enroll in a course, simply visit the Courses page, select your desired course, and click the 'Enroll Now' button. You will be guided through the registration and payment process." },
+    { question: /what courses are available/i, answer: "We offer courses in Web Development, Data Science, Artificial Intelligence, Cybersecurity, Cloud Computing, Robotics, Blockchain, and more. Check the Courses page for detailed syllabi and schedules." },
+    { question: /are the courses self-paced/i, answer: "Most of our courses are self-paced, allowing you to learn at your own convenience. Some courses may include live sessions or instructor-led components." },
+    { question: /how long do courses take to complete/i, answer: "Course durations vary, typically ranging from 4 to 12 weeks depending on the subject and depth. You can view estimated completion times on each course's overview page." },
+    { question: /do you provide certificates/i, answer: "Yes, upon successful completion of a course, you will receive a digital certificate that you can download and share on professional platforms like LinkedIn." },
+    { question: /can i access courses on mobile/i, answer: "Absolutely! TechSpira is optimized for all devices including smartphones and tablets, so you can learn anytime, anywhere." },
+    { question: /how do i reset my password/i, answer: "If you forgot your password, click the 'Forgot Password' link on the login page and follow the instructions to reset it via your registered email." },
+    { question: /is there a refund policy/i, answer: "We offer a 7-day refund policy for most paid courses if you have completed less than 20% of the content. Please contact support for assistance." },
+    { question: /how can i contact support/i, answer: "You can reach our support team via the chatbot, email at support@techspira.com, or through WhatsApp support available in the chatbot interface." },
+    { question: /can i switch courses after enrolling/i, answer: "Yes, you can switch courses within the first 20% of course completion. Contact support to assist with the switch." },
+    { question: /do you offer group discounts/i, answer: "We provide group discounts for teams of 5 or more. Please contact our sales team for detailed pricing and offers." },
+    { question: /how do i track my progress/i, answer: "Your dashboard displays your progress for each enrolled course, including completed lessons, quizzes, and overall percentage." },
+    { question: /are there quizzes and assignments/i, answer: "Yes, all courses include interactive quizzes and assignments to reinforce your learning and assess your understanding." },
+    { question: /can i download course materials/i, answer: "You can download PDFs and supplementary materials where available. Video downloads may be limited based on course policies." },
+    { question: /do you have live sessions/i, answer: "Some courses include live instructor sessions and Q&A webinars. Check the course details for live session schedules." },
+    { question: /how do i communicate with instructors/i, answer: "You can message instructors through the course dashboard or participate in discussion forums for each course." },
+    { question: /is there a community for learners/i, answer: "Yes, join our Discord server and course-specific forums to connect with fellow learners and mentors." },
+    { question: /what payment methods are accepted/i, answer: "We accept payments via credit/debit cards, UPI, net banking, and PayPal through our secure checkout." },
+    { question: /can i get a refund if i am not satisfied/i, answer: "Refunds are available within 7 days of purchase if less than 20% of the course is completed. Contact support to initiate a refund." },
+    { question: /how do i update my profile information/i, answer: "Go to your Profile page to update your personal details, contact information, and preferences." },
+    { question: /do you offer scholarships or financial aid/i, answer: "We occasionally offer scholarships and financial aid. Keep an eye on announcements or contact support for current opportunities." },
+    { question: /can i pause and resume courses/i, answer: "Yes, your progress is saved automatically, so you can pause and resume courses anytime." },
+    { question: /how do i get help with technical issues/i, answer: "For technical support, use the chatbot, email support, or WhatsApp support available in the chatbot interface." },
+    { question: /are courses updated regularly/i, answer: "Our courses are reviewed and updated regularly to ensure content stays current with industry standards." },
+    { question: /can i share my certificate on social media/i, answer: "Yes, certificates come with shareable links optimized for LinkedIn and other platforms." },
+    { question: /do you provide transcripts or detailed reports/i, answer: "You can download your learning transcripts and progress reports from your dashboard." },
+    { question: /how secure is my data/i, answer: "We take data security seriously and comply with industry best practices to protect your information." },
+    { question: /can i learn multiple courses simultaneously/i, answer: "Yes, you can enroll and learn multiple courses at the same time." },
+    { question: /what if i have questions during the course/i, answer: "Use the discussion forums, message instructors, or ask questions via the chatbot for assistance." },
+    { question: /do you offer career counseling/i, answer: "We provide career guidance and mentorship programs. Contact support for more information." },
+    { question: /how do i cancel my enrollment/i, answer: "You can cancel enrollment from your dashboard before completing 20% of the course. Contact support for help." },
+    { question: /can i access courses after completion/i, answer: "Yes, you have lifetime access to courses you have completed." },
+    { question: /do you have a mobile app/i, answer: "Our mobile app is available on iOS and Android for convenient learning on the go." },
+    { question: /how do i provide feedback/i, answer: "You can rate and review courses after completion via your dashboard." },
+    { question: /can i download videos for offline viewing/i, answer: "Video downloads are available for select courses. Check course details for availability." },
+    { question: /what are the system requirements/i, answer: "A modern web browser and stable internet connection are required for the best experience." },
+    { question: /do you offer live chat support/i, answer: "Yes, live chat support is available during business hours via the chatbot interface." },
+    { question: /how do i reset my learning progress/i, answer: "You can reset your progress from course settings if you want to start over." },
+    { question: /can i get help with assignments/i, answer: "Instructors and mentors are available to assist with assignments through course forums." },
+    { question: /do you offer certificates for free courses/i, answer: "Certificates are provided for free courses that include assessments and completion criteria." },
+    { question: /how do i report bugs or issues/i, answer: "Use the 'Report Issue' button in your profile or contact support via email or WhatsApp." },
+    { question: /can i customize my learning dashboard/i, answer: "Yes, you can rearrange widgets and personalize your dashboard layout." },
+    { question: /what languages are courses available in/i, answer: "Currently, courses are offered in English with subtitles in multiple languages." },
+    { question: /do you offer mentorship programs/i, answer: "We offer mentorship programs for select courses. Contact support to learn more." },
+    { question: /how do i access course materials/i, answer: "Course materials are accessible from the course dashboard under each lesson." },
+    { question: /can i share courses with friends/i, answer: "You can share course links and referral codes with friends for discounts." },
+    { question: /what is the refund process/i, answer: "To request a refund, contact support within 7 days of purchase with your order details." },
+    { question: /how do i change my email address/i, answer: "Update your email address from your Profile settings page." },
+    { question: /do you offer corporate training/i, answer: "Yes, we provide corporate training solutions. Contact sales for details." },
+    { question: /can i get a transcript of my courses/i, answer: "Transcripts are available for download from your dashboard." },
+    { question: /how do i delete my account/i, answer: "Account deletion is permanent. You can request deletion from Profile > Settings." },
+    { question: /do you have a referral program/i, answer: "Yes, refer friends and earn rewards through our referral program." },
+    { question: /can i access courses offline/i, answer: "Offline access is available for select courses via our mobile app." },
+    { question: /how do i update my payment information/i, answer: "Update payment details from your account billing settings." },
+    { question: /what is the course refund policy/i, answer: "Refunds are available within 7 days if less than 20% of the course is completed." },
+    { question: /do you offer discounts for students/i, answer: "Student discounts are available on select courses. Contact support for eligibility." },
+    { question: /how do i contact instructors/i, answer: "Message instructors directly through the course dashboard or forums." },
+    { question: /can i get help with career advice/i, answer: "Career counseling is available through our mentorship programs." },
+    { question: /what is the learning path/i, answer: "Learning paths guide you through a sequence of courses tailored to your goals." },
+    { question: /how do i access live sessions/i, answer: "Live sessions are accessible via the course dashboard on scheduled dates." },
+    { question: /can i retake quizzes/i, answer: "Quizzes can be retaken as per course policies to improve your score." },
+    { question: /do you provide transcripts/i, answer: "Yes, transcripts are downloadable from your profile." },
+    { question: /how do i change my password/i, answer: "Change your password from Profile > Security settings." },
+    { question: /can i get a certificate for partial completion/i, answer: "Certificates are awarded only upon full course completion." },
+    { question: /do you offer practice projects/i, answer: "Many courses include hands-on projects to apply your learning." },
+    { question: /how do i access course forums/i, answer: "Forums are available within each course dashboard for discussions." },
+    { question: /can i get notifications for course updates/i, answer: "Enable notifications in your account settings to stay updated." },
+    { question: /do you support multiple devices/i, answer: "Yes, your progress syncs across all devices logged into your account." },
+    { question: /how do i provide course feedback/i, answer: "Submit feedback and ratings after course completion via your dashboard." },
+    { question: /can i pause my subscription/i, answer: "Subscription pause options are available. Contact support for assistance." },
+    { question: /what is the refund timeframe/i, answer: "Refund requests must be made within 7 days of purchase." },
+    { question: /do you offer trial periods/i, answer: "Some courses offer free trial lessons. Check course details for availability." },
+    { question: /how do i access course certificates/i, answer: "Certificates are available for download from your dashboard after completion." },
+    { question: /can i share my progress with others/i, answer: "You can share your progress reports and certificates with peers or employers." },
+    { question: /do you have a help center/i, answer: "Visit our Help Center for FAQs, guides, and support resources." },
+    { question: /how do i update my profile picture/i, answer: "Update your profile picture from your Profile settings page." },
+    { question: /can i get reminders for assignments/i, answer: "Enable assignment reminders in your notification settings." },
+    { question: /do you offer language support/i, answer: "Courses are primarily in English with subtitles in multiple languages." },
+    { question: /how do i access course transcripts/i, answer: "Transcripts are downloadable from your course dashboard." },
+    { question: /can i get help with course selection/i, answer: "Use our course recommendation tool or contact support for guidance." },
+    { question: /do you offer certificates for free courses/i, answer: "Certificates are provided for free courses that meet completion criteria." },
+    { question: /how do i report inappropriate content/i, answer: "Report issues via the 'Report' button in course forums or contact support." },
+    { question: /can i get help with technical setup/i, answer: "Technical support is available via chatbot, email, and WhatsApp." },
+    { question: /do you offer group enrollments/i, answer: "Group enrollments are supported with special pricing. Contact sales." },
+    { question: /how do i access course materials offline/i, answer: "Offline access is available through our mobile app for select courses." },
+    { question: /can i get help with assignments/i, answer: "Instructors and mentors assist with assignments via forums and messaging." },
+    { question: /do you offer mentorship/i, answer: "Mentorship programs are available for select courses. Contact support." },
+    { question: /how do i cancel my subscription/i, answer: "Cancel subscriptions from your account billing settings or contact support." },
+    { question: /can i get a refund if unsatisfied/i, answer: "Refunds are available within 7 days if less than 20% of the course is completed." },
+    { question: /do you offer career services/i, answer: "Career services including counseling and job placement assistance are available." },
+    { question: /how do i access live webinars/i, answer: "Live webinars are accessible via course dashboards on scheduled dates." },
+    { question: /can i share course content/i, answer: "Sharing course content is restricted by copyright. Share course links instead." },
+    { question: /do you offer certificates for professional development/i, answer: "Yes, certificates can be used for professional development and continuing education." },
+    { question: /how do i update billing information/i, answer: "Update billing info from your account settings under Billing." },
+    { question: /can i get help with course navigation/i, answer: "Use the chatbot or support channels for help navigating courses." },
+    { question: /do you offer discounts/i, answer: "Discounts are available during promotions and for students. Contact support." },
+    { question: /how do i access course transcripts/i, answer: "Transcripts are downloadable from your profile and course dashboards." },
+    { question: /can i get help with account issues/i, answer: "Account support is available via chatbot, email, and WhatsApp." },
+    { question: /do you offer certificates for workshops/i, answer: "Certificates are provided for workshops that meet completion requirements." },
+    { question: /how do i change my notification preferences/i, answer: "Change notification settings from your account preferences." },
+    { question: /can i get help with course prerequisites/i, answer: "Prerequisites are listed on course pages. Contact support for guidance." },
+    { question: /do you offer personalized learning paths/i, answer: "Yes, personalized learning paths are available based on your goals." },
+    { question: /how do i access course forums/i, answer: "Forums are accessible within each course dashboard for discussions." },
+    { question: /can i get help with course technical requirements/i, answer: "Technical requirements are listed on course pages. Support is available if needed." },
+    { question: /do you offer certificates for continuing education/i, answer: "Certificates can be used for continuing education credits where applicable." },
+    { question: /how do i update my contact information/i, answer: "Update contact info from your Profile settings page." },
+    { question: /can i get help with course deadlines/i, answer: "Deadlines are shown in course dashboards. Contact support for extensions." },
+    { question: /do you offer certificates for online courses/i, answer: "Yes, digital certificates are provided for all completed online courses." },
+    { question: /how do i access course videos/i, answer: "Videos are accessible within each lesson on the course dashboard." },
+    { question: /can i get help with course feedback/i, answer: "Submit feedback via your dashboard or contact support for assistance." },
+    { question: /do you offer certificates for professional training/i, answer: "Certificates are available for professional training courses." },
+    { question: /how do i change my password/i, answer: "Change your password from Profile > Security settings." },
+    { question: /can i get help with course schedules/i, answer: "Schedules are available on course pages. Contact support for changes." },
+    { question: /do you offer certificates for skill development/i, answer: "Certificates are provided for skill development courses." },
+    { question: /how do i access course quizzes/i, answer: "Quizzes are accessible within each lesson on the course dashboard." },
+    { question: /can i get help with course enrollment/i, answer: "Use the chatbot or contact support for enrollment assistance." },
+    { question: /do you offer certificates for certification courses/i, answer: "Certificates are provided for certification courses upon completion." },
+    { question: /how do i update my profile/i, answer: "Update your profile from your Profile settings page." },
+    { question: /can i get help with course content/i, answer: "Contact instructors or support for help with course content." },
+    { question: /do you offer certificates for advanced courses/i, answer: "Certificates are available for advanced courses upon completion." },
+    { question: /how do i access course assignments/i, answer: "Assignments are accessible within each lesson on the course dashboard." },
+    { question: /can i get help with course payments/i, answer: "Contact support for assistance with payments and billing." },
+    { question: /do you offer certificates for beginner courses/i, answer: "Certificates are provided for beginner courses upon completion." },
+    { question: /how do i update my learning preferences/i, answer: "Update learning preferences from your Profile settings." },
+    { question: /can i get help with course navigation/i, answer: "Use the chatbot or support channels for help navigating courses." },
+    { question: /do you offer certificates for intermediate courses/i, answer: "Certificates are available for intermediate courses upon completion." },
+    { question: /how do i access course resources/i, answer: "Resources are accessible within each lesson on the course dashboard." },
+    { question: /can i get help with course technical issues/i, answer: "Technical support is available via chatbot, email, and WhatsApp." },
+    { question: /do you offer certificates for expert courses/i, answer: "Certificates are provided for expert-level courses upon completion." },
+    { question: /how do i update my account settings/i, answer: "Update account settings from your Profile page." },
+    { question: /can i get help with course progress/i, answer: "Use the dashboard or contact support for progress assistance." },
+    { question: /do you offer certificates for professional development/i, answer: "Certificates are available for professional development courses." },
+    { question: /how do i access course feedback/i, answer: "Feedback can be submitted via your dashboard after course completion." },
+    { question: /can i get help with course certificates/i, answer: "Contact support for help with certificates and verification." },
+    { question: /do you offer certificates for continuing education/i, answer: "Certificates can be used for continuing education credits where applicable." },
+    { question: /how do i update my billing information/i, answer: "Update billing info from your account settings under Billing." },
+    { question: /can i get help with course refunds/i, answer: "Refunds are available within 7 days if less than 20% of the course is completed." },
+    { question: /do you offer certificates for online learning/i, answer: "Yes, digital certificates are provided for all completed online courses." },
+    { question: /how do i access course notifications/i, answer: "Notifications can be managed from your account settings." },
+    { question: /can i get help with course cancellations/i, answer: "Contact support to cancel enrollments or subscriptions." },
+    { question: /do you offer certificates for skill enhancement/i, answer: "Certificates are available for skill enhancement courses." },
+    { question: /how do i update my contact preferences/i, answer: "Update contact preferences from your Profile settings." },
+    { question: /can i get help with course extensions/i, answer: "Contact support to request extensions on course deadlines." },
+    { question: /do you offer certificates for professional courses/i, answer: "Certificates are provided for professional courses upon completion." },
+    { question: /how do i access course transcripts/i, answer: "Transcripts are downloadable from your profile and course dashboards." },
+    { question: /can i get help with course upgrades/i, answer: "Contact support for information on course upgrades and additional content." },
+    { question: /do you offer certificates for certification programs/i, answer: "Certificates are provided for certification programs upon completion." },
+    { question: /how do i update my learning goals/i, answer: "Update learning goals from your Profile settings page." },
+    { question: /can i get help with course renewals/i, answer: "Contact support for course renewal options and pricing." },
+    { question: /do you offer certificates for advanced training/i, answer: "Certificates are available for advanced training courses." },
+    { question: /how do i access course schedules/i, answer: "Schedules are available on course pages and dashboards." },
+    { question: /can i get help with course technical support/i, answer: "Technical support is available via chatbot, email, and WhatsApp." },
+    { question: /do you offer certificates for professional certifications/i, answer: "Certificates are provided for professional certifications upon completion." },
   ];
 
+  // Function to check if user input matches at least 30% of a question string
+  const isPartialMatch = (input: string, question: string) => {
+    const inputLower = input.toLowerCase();
+    const questionLower = question.toLowerCase();
+    if (inputLower.length < Math.ceil(questionLower.length * 0.3)) {
+      return false;
+    }
+    return questionLower.includes(inputLower);
+  };
+
   const getBotResponse = (userMessage: string) => {
-    const message = userMessage.toLowerCase();
-    
-    // Find matching question in knowledge base
-    const matchedQuestion = lmsKnowledgeBase.find(item => 
+    const message = userMessage.toLowerCase().trim();
+
+    // First try exact regex match
+    const matchedQuestion = lmsKnowledgeBase.find(item =>
       item.question.test(message)
     );
 
     if (matchedQuestion) {
       return matchedQuestion.answer;
+    }
+
+    // If no exact match, try partial match with at least 30% of question text
+    const partialMatch = lmsKnowledgeBase.find(item => {
+      // Extract question string from regex pattern for partial matching
+      const questionStr = item.question.source.replace(/\\b|\\s|\^|\$|\|/g, " ").trim();
+      return isPartialMatch(message, questionStr);
+    });
+
+    if (partialMatch) {
+      return partialMatch.answer;
     }
 
     // Fallback responses
@@ -607,24 +206,24 @@ export default function ChatbotPage() {
       "Could you rephrase your question? I'm here to help with LMS-related queries.",
       "I don't have that information. For detailed help, please contact our support team."
     ];
-    
+
     return fallbacks[Math.floor(Math.random() * fallbacks.length)];
   };
 
   const handleSendMessage = () => {
     if (!inputValue.trim()) return;
-    
+
     // Add user message
     setMessages(prev => [...prev, { text: inputValue, sender: "user" }]);
     setInputValue("");
-    
+
     // Get and send bot response after a delay
     setTimeout(() => {
-      setMessages(prev => [...prev, { 
-        text: mode === "chat" 
+      setMessages(prev => [...prev, {
+        text: mode === "chat"
           ? getBotResponse(inputValue)
           : "You can contact us on WhatsApp at +91 12345 67890 for course inquiries and support.",
-        sender: "bot" 
+        sender: "bot"
       }]);
     }, 1000);
   };
@@ -654,7 +253,7 @@ export default function ChatbotPage() {
               <h3 className="font-bold">
                 {mode === "chat" ? "TechSpira Assistant" : "WhatsApp Support"}
               </h3>
-              <button 
+              <button
                 onClick={toggleChatbot}
                 className="text-white hover:text-gray-200"
               >
@@ -692,8 +291,8 @@ export default function ChatbotPage() {
                       className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"}`}
                     >
                       <div
-                        className={`max-w-xs rounded-lg px-4 py-2 ${message.sender === "user" 
-                          ? "bg-blue-600 text-white rounded-br-none" 
+                        className={`max-w-xs rounded-lg px-4 py-2 ${message.sender === "user"
+                          ? "bg-blue-600 text-white rounded-br-none"
                           : "bg-gray-100 text-gray-800 rounded-bl-none"}`}
                       >
                         {message.text}
@@ -716,26 +315,6 @@ export default function ChatbotPage() {
                   <p className="text-gray-600 mb-4">
                     Contact us directly on WhatsApp for quick assistance with courses, enrollment, and support.
                   </p>
-                  <div className="space-y-2 text-left w-full">
-                    <div className="flex items-center">
-                      <svg className="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
-                      <span>Course information</span>
-                    </div>
-                    <div className="flex items-center">
-                      <svg className="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
-                      <span>Enrollment assistance</span>
-                    </div>
-                    <div className="flex items-center">
-                      <svg className="w-5 h-5 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
-                      <span>Technical support</span>
-                    </div>
-                  </div>
                   <a
                     href="https://wa.me/919108273496"
                     target="_blank"

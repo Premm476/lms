@@ -1,32 +1,33 @@
-import React, { useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { useSession } from 'next-auth/react';
-import StudentDashboard from './student/StudentDashboard';
+"use client";
+import React, { useEffect } from "react";
+import { useRouter } from "next/navigation";
+import { useSession } from "next-auth/react";
+import StudentDashboard from "./student/StudentDashboard";
 
 export default function DashboardIndex() {
   const router = useRouter();
   const { data: session, status } = useSession();
 
   useEffect(() => {
-    if (status === 'loading') return;
-    
+    if (status === "loading") return;
+
     if (!session) {
-      router.replace('/login');
+      router.push("/login");
       return;
     }
 
     switch (session.user?.role) {
-      case 'STUDENT':
-        router.replace('/dashboard/student');
+      case "STUDENT":
+        router.push("/dashboard/student");
         break;
-      case 'INSTRUCTOR':
-        router.replace('/dashboard/instructor');
+      case "INSTRUCTOR":
+        router.push("/dashboard/instructor");
         break;
-      case 'ADMIN':
-        router.replace('/dashboard/admin');
+      case "ADMIN":
+        router.push("/dashboard/admin");
         break;
       default:
-        router.replace('/login');
+        router.push("/login");
     }
   }, [session, status, router]);
 
@@ -39,6 +40,8 @@ export default function DashboardIndex() {
 
 DashboardIndex.auth = {
   required: true,
-  loading: <div className="flex items-center justify-center min-h-screen">Loading...</div>,
-  unauthorized: '/login'
+  loading: (
+    <div className="flex items-center justify-center min-h-screen">Loading...</div>
+  ),
+  unauthorized: "/login",
 };

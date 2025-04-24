@@ -2,7 +2,15 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { getToken } from 'next-auth/jwt';
 
-const PUBLIC_PATHS = ['/login', '/register', '/auth/error', '/api/auth', '/api/test-email'];
+const PUBLIC_PATHS = [
+  '/login',
+  '/register',
+  '/auth/error',
+  '/api/auth',
+  '/api/test-email',
+  '/api/exam/start',
+  '/api/exam/',
+];
 const PROTECTED_PATHS = ['/dashboard', '/admin', '/instructor'];
 
 export async function middleware(request: NextRequest) {
@@ -33,9 +41,13 @@ export async function middleware(request: NextRequest) {
     secret: process.env.NEXTAUTH_SECRET,
   });
 
-  // 🔒 Protect all /api routes except /api/auth
-  if (pathname.startsWith('/api') && !pathname.startsWith('/api/auth')) {
+  // Debug logging for token presence
+  console.log(`[middleware] Request to ${pathname} - token present: ${!!token}`);
+
+  // 🔒 Protect all /api routes except /api/auth and other public API paths
+  if (pathname.startsWith('/api') && !PUBLIC_PATHS.some((path) => pathname.startsWith(path))) {
     if (!token) {
+      console.log(`[middleware] Unauthorized API request to ${pathname} - no token`);
       return new NextResponse(JSON.stringify({ error: 'Unauthorized' }), {
         status: 401,
         headers: { 'Content-Type': 'application/json' },
@@ -46,6 +58,7 @@ export async function middleware(request: NextRequest) {
 
   // 🚫 Block unauthenticated users from protected routes
   if (!token && PROTECTED_PATHS.some((path) => pathname.startsWith(path))) {
+    console.log(`[middleware] Redirecting unauthenticated user from ${pathname} to /login`);
     const loginUrl = new URL('/login', request.url);
     loginUrl.searchParams.set('callbackUrl', pathname);
     return NextResponse.redirect(loginUrl);
@@ -59,6 +72,7 @@ export async function middleware(request: NextRequest) {
         : token.role === 'INSTRUCTOR'
         ? '/instructor'
         : '/dashboard';
+    console.log(`[middleware] Redirecting logged-in user from ${pathname} to ${redirectTo}`);
     return NextResponse.redirect(new URL(redirectTo, request.url));
   }
 
@@ -68,6 +82,7 @@ export async function middleware(request: NextRequest) {
 
     // STUDENT cannot access /admin
     if (role === 'STUDENT' && pathname.startsWith('/admin')) {
+      console.log(`[middleware] Redirecting STUDENT from /admin to /dashboard`);
       return NextResponse.redirect(new URL('/dashboard', request.url));
     }
 
@@ -77,6 +92,7 @@ export async function middleware(request: NextRequest) {
       pathname.startsWith('/admin') &&
       !pathname.startsWith('/admin/courses')
     ) {
+      console.log(`[middleware] Redirecting INSTRUCTOR from /admin to /instructor`);
       return NextResponse.redirect(new URL('/instructor', request.url));
     }
   }

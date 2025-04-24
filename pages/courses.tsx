@@ -261,13 +261,13 @@ export default function Courses() {
 
             {/* Desktop Navigation */}
             <div className="hidden md:flex items-center space-x-8">
-              <Link href="/" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">Home</Link>
-              <Link href="/courses" className="text-blue-600 font-medium">Courses</Link>
-              <Link href="/about" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">About</Link>
-              <Link href="/contact" className="text-gray-700 hover:text-blue-600 transition-colors font-medium">Contact</Link>
+              <Link href="/" passHref className="text-gray-700 hover:text-blue-600 transition-colors font-medium">Home</Link>
+              <Link href="/courses" passHref className="text-blue-600 font-medium">Courses</Link>
+              <Link href="/about" passHref className="text-gray-700 hover:text-blue-600 transition-colors font-medium">About</Link>
+              <Link href="/contact" passHref className="text-gray-700 hover:text-blue-600 transition-colors font-medium">Contact</Link>
               
               <div className="flex space-x-4">
-                <Link href="/login">
+                <Link href="/login" passHref>
                   <motion.button
                     className="px-4 py-2 text-gray-700 font-medium hover:text-blue-600 transition-colors"
                     whileHover={{ scale: 1.05 }}
@@ -276,7 +276,7 @@ export default function Courses() {
                     Login
                   </motion.button>
                 </Link>
-                <Link href="/signup">
+                <Link href="/signup" passHref>
                   <motion.button
                     className="px-4 py-2 bg-blue-600 text-white rounded-md font-medium shadow-sm hover:bg-blue-700 transition-colors"
                     whileHover={{ scale: 1.05 }}
@@ -310,13 +310,13 @@ export default function Courses() {
               className="md:hidden bg-white shadow-lg"
             >
               <div className="px-4 pt-2 pb-4 space-y-2">
-                <Link href="/" className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100">Home</Link>
-                <Link href="/courses" className="block px-3 py-2 rounded-md text-blue-600 bg-blue-50">Courses</Link>
-                <Link href="/about" className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100">About</Link>
-                <Link href="/contact" className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100">Contact</Link>
+                <Link href="/" passHref className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100">Home</Link>
+                <Link href="/courses" passHref className="block px-3 py-2 rounded-md text-blue-600 bg-blue-50">Courses</Link>
+                <Link href="/about" passHref className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100">About</Link>
+                <Link href="/contact" passHref className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100">Contact</Link>
                 <div className="pt-2 border-t border-gray-200">
-                  <Link href="/login" className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100">Login</Link>
-                  <Link href="/signup" className="block px-3 py-2 mt-2 rounded-md bg-blue-600 text-white text-center">Sign Up</Link>
+                  <Link href="/login" passHref className="block px-3 py-2 rounded-md text-gray-700 hover:bg-gray-100">Login</Link>
+                  <Link href="/signup" passHref className="block px-3 py-2 mt-2 rounded-md bg-blue-600 text-white text-center">Sign Up</Link>
                 </div>
               </div>
             </motion.div>
@@ -351,12 +351,12 @@ export default function Courses() {
               transition={{ duration: 0.5, delay: 0.4 }}
               className="flex flex-col sm:flex-row justify-center gap-4"
             >
-              <Link href="#courses">
+              <Link href="#courses" passHref>
                 <button className="px-6 py-3 bg-white text-blue-600 font-semibold rounded-lg hover:bg-gray-100 transition-colors shadow-md">
                   Browse Courses
                 </button>
               </Link>
-              <Link href="/signup">
+              <Link href="/signup" passHref>
                 <button className="px-6 py-3 bg-transparent border-2 border-white text-white font-semibold rounded-lg hover:bg-white hover:text-blue-600 transition-colors">
                   Start Learning Free
                 </button>
@@ -467,7 +467,7 @@ export default function Courses() {
                   )}
 
                   {/* Course Image */}
-                  <Link href={`/course/${course.id}`} passHref>
+                  <Link href={`/${course.id}`} passHref>
                     <div className="relative h-48 w-full cursor-pointer">
                       <Image
                         src={course.image}
@@ -491,7 +491,7 @@ export default function Courses() {
                       </span>
                     </div>
 
-                    <Link href={`/course/${course.id}`} passHref>
+                    <Link href={`/${course.id}`} passHref>
                       <h3 className="text-xl font-bold text-gray-800 mb-2 hover:text-blue-600 transition-colors cursor-pointer">
                         {course.title}
                       </h3>
@@ -519,12 +519,15 @@ export default function Courses() {
 
                     <div className="flex justify-between items-center">
                       <div>
-                        <span className="text-2xl font-bold text-gray-800">₹{course.price}</span>
-                        {course.price > 2999 && (
-                          <span className="text-sm text-gray-500 line-through ml-2">
-                            ₹{Math.round(course.price * 1.2)}
-                          </span>
-                        )}
+                        <button
+                          onClick={() => router.push(`/course/${course.id}/payment`)}
+                          className="text-2xl font-bold text-gray-800 underline hover:text-blue-600"
+                        >
+                          ₹5
+                        </button>
+                        <span className="text-sm text-gray-500 line-through ml-2">
+                          ₹{course.price}
+                        </span>
                       </div>
                       <button
                         onClick={() => handleEnrollment(course.id)}
@@ -567,12 +570,12 @@ export default function Courses() {
             <h2 className="text-2xl md:text-3xl font-bold mb-4">Ready to start learning?</h2>
             <p className="text-lg mb-8">Join our community of over 100,000 learners worldwide.</p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
-              <Link href="/signup">
+              <Link href="/signup" passHref>
                 <button className="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition-colors shadow-md">
                   Get Started for Free
                 </button>
               </Link>
-              <Link href="/courses">
+              <Link href="/courses" passHref>
                 <button className="px-6 py-3 bg-transparent border-2 border-white text-white font-semibold rounded-lg hover:bg-white hover:text-gray-800 transition-colors">
                   Browse All Courses
                 </button>
@@ -593,10 +596,10 @@ export default function Courses() {
             <div>
               <h3 className="text-lg font-semibold mb-4">Quick Links</h3>
               <ul className="space-y-2">
-                <li><Link href="/" className="text-gray-400 hover:text-white transition-colors">Home</Link></li>
-                <li><Link href="/courses" className="text-gray-400 hover:text-white transition-colors">Courses</Link></li>
-                <li><Link href="/about" className="text-gray-400 hover:text-white transition-colors">About Us</Link></li>
-                <li><Link href="/contact" className="text-gray-400 hover:text-white transition-colors">Contact</Link></li>
+                <li><Link href="/" passHref className="text-gray-400 hover:text-white transition-colors">Home</Link></li>
+                <li><Link href="/courses" passHref className="text-gray-400 hover:text-white transition-colors">Courses</Link></li>
+                <li><Link href="/about" passHref className="text-gray-400 hover:text-white transition-colors">About Us</Link></li>
+                <li><Link href="/contact" passHref className="text-gray-400 hover:text-white transition-colors">Contact</Link></li>
               </ul>
             </div>
             <div>

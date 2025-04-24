@@ -4,7 +4,7 @@ import { WelcomeEmail } from "../emails/welcome-email";
 import { NotificationEmail } from "../emails/notification-email";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const fromEmail = process.env.DEFAULT_FROM_EMAIL || 'noreply@yourdomain.com';
+const fromEmail = process.env.DEFAULT_FROM_EMAIL || 'onboarding@resend.dev';
 
 export async function sendPasswordResetEmail(email: string, resetLink: string) {
   try {

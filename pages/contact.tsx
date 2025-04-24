@@ -58,7 +58,7 @@ export default function Contact() {
             ].map((item, index) => (
               <li key={index}>
                 {item.type === "button" ? (
-                  <Link href={item.link}>
+                  <Link href={item.link} passHref>
                     <motion.button
                       className="bg-blue-600 text-white px-4 py-2 rounded-lg font-semibold shadow-md transition-all duration-300 hover:bg-blue-500 hover:shadow-xl hover:scale-105 active:bg-gray-500 active:scale-95"
                       whileHover={{ scale: 1.05 }}
@@ -68,7 +68,7 @@ export default function Contact() {
                     </motion.button>
                   </Link>
                 ) : (
-                  <Link href={item.link}>
+                  <Link href={item.link} passHref>
                     <motion.div
                       className="relative text-gray-900 font-bold hover:text-blue-600 transition-all duration-300"
                       whileHover={{ scale: 1.05 }}

@@ -44,7 +44,13 @@ export default function CourseDetail() {
 
     const fetchCourse = async () => {
       try {
-        const response = await fetch(`/api/courses/${courseId}`);
+        // Fetch course details only if user is enrolled
+        const response = await fetch(`/api/student/courses/${courseId}`);
+        if (response.status === 403) {
+          setError('You are not enrolled in this course.');
+          setLoading(false);
+          return;
+        }
         if (!response.ok) {
           throw new Error('Failed to fetch course');
         }

@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, ChangeEvent, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import Head from "next/head";
 import Link from "next/link";
@@ -15,8 +15,8 @@ interface FormData {
 }
 
 export default function Login() {
-  const router = useRouter();
   const searchParams = useSearchParams();
+  const router = useRouter();
   const [formData, setFormData] = useState<FormData>({
     email: "",
     password: "",
@@ -28,7 +28,6 @@ export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [registeredEmail, setRegisteredEmail] = useState("");
 
-  // Check for registration success message
   useEffect(() => {
     if (searchParams?.get("registered") === "true") {
       const email = searchParams.get("email");
@@ -62,13 +61,11 @@ export default function Login() {
       });
 
       if (result?.error) {
-        throw new Error(result.error);
-      }
-
-      if (result?.url) {
-        router.push(result.url);
+        setError(result.error);
+      } else if (result?.ok) {
+        router.push(result.url || "/dashboard");
       } else {
-        router.push("/dashboard");
+        setError("Login failed. Please check your credentials.");
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Login failed. Please check your credentials.");
@@ -133,19 +130,18 @@ export default function Login() {
             {navItems.map((item, index) => (
               <li key={index} className="my-2 md:my-0">
                 {item.type === "button" ? (
-                  <Link href={item.link} passHref legacyBehavior>
-                    <motion.a
+                  <Link href={item.link} passHref>
+                    <motion.button
                       whileHover={{ scale: 1.03 }}
                       whileTap={{ scale: 0.98 }}
+                      className="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-md font-medium shadow-sm transition-all duration-200"
                     >
-                      <button className="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded-md font-medium shadow-sm transition-all duration-200">
-                        {item.name}
-                      </button>
-                    </motion.a>
+                      {item.name}
+                    </motion.button>
                   </Link>
                 ) : (
-                  <Link href={item.link} passHref legacyBehavior>
-                    <motion.a
+                  <Link href={item.link} passHref>
+                    <motion.div
                       className="relative block text-gray-700 font-medium hover:text-blue-700 transition-colors"
                       whileHover={{ scale: 1.03 }}
                     >
@@ -156,7 +152,7 @@ export default function Login() {
                         whileHover={{ scaleX: 1 }}
                         transition={{ duration: 0.2 }}
                       />
-                    </motion.a>
+                    </motion.div>
                   </Link>
                 )}
               </li>
@@ -272,7 +268,7 @@ export default function Login() {
                 <span className="text-sm text-gray-700">Remember me</span>
               </label>
 
-              <Link href="/forgot-password" className="text-sm text-blue-600 hover:text-blue-700 transition-colors">
+              <Link href="/forgot-password" passHref className="text-sm text-blue-600 hover:text-blue-700 transition-colors">
                 Forgot password?
               </Link>
             </div>
@@ -348,7 +344,7 @@ export default function Login() {
           <div className="mt-8 text-center">
             <p className="text-sm text-gray-600">
               Don't have an account?{' '}
-              <Link href="/signup" className="font-medium text-blue-600 hover:text-blue-700 transition-colors">
+              <Link href="/signup" passHref className="font-medium text-blue-600 hover:text-blue-700 transition-colors">
                 Sign up
               </Link>
             </p>

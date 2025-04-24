@@ -4,13 +4,6 @@ import React, { useEffect, useState } from "react";
 import { getSession } from "next-auth/react";
 import { GetServerSidePropsContext } from "next";
 
-interface ErrorWithMessage {
-  message: string;
-}
-
-function isErrorWithMessage(error: unknown): error is ErrorWithMessage {
-  return typeof error === 'object' && error !== null && 'message' in error;
-}
 
 export default function EnrollPage() {
   const router = useRouter();
@@ -21,35 +14,8 @@ export default function EnrollPage() {
   useEffect(() => {
     if (!courseId || status !== "idle") return;
 
-    const enroll = async () => {
-      setStatus("loading");
-      setMessage("Processing enrollment...");
-      
-      try {
-        const response = await fetch(`/api/course/${courseId}/enroll`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-        });
-
-        if (!response.ok) {
-          const errorData = await response.json();
-          throw new Error(errorData.error || "Enrollment failed");
-        }
-
-        setStatus("success");
-        setMessage("Success! Redirecting to course...");
-        setTimeout(() => router.push(`/course/${courseId}`), 2000);
-      } catch (error) {
-        setStatus("error");
-        if (isErrorWithMessage(error)) {
-          setMessage(error.message);
-        } else {
-          setMessage("An unknown error occurred during enrollment");
-        }
-      }
-    };
-
-    enroll();
+    // Redirect to payment page instead of direct enrollment
+    router.push(`/course/${courseId}/payment`);
   }, [courseId, router, status]);
 
   return (
